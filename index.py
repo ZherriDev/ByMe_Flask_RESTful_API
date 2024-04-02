@@ -19,7 +19,7 @@ class UserSchema(Schema):
     email = fields.Email(required=True)
     password = fields.Str(required=True)
 
-#!   R   E   G   I   S   T   E   R
+#!   R   E   G   I   S   T   E   R A
 @app.route('/register', methods = ['POST'])
 def register_user():
     data = request.get_json()
