@@ -18,6 +18,10 @@ class UserSchema(Schema):
     name = fields.Str(required=True)
     email = fields.Email(required=True)
     password = fields.Str(required=True)
+    
+@app.route('/', methods=['GET'])
+def index():
+    return 'Olá'
 
 #!   R   E   G   I   S   T   E   R
 @app.route('/register', methods = ['POST'])
