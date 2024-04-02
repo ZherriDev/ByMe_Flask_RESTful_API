@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 user_db = 'root'
 password_db = 'root'
-host_db = 'localhost'
+host_db = '192.168.1.155'
 database_db = 'teste'
 
 engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}/{database_db}')
