@@ -7,11 +7,12 @@ import bcrypt
 app = Flask(__name__)
 
 user_db = 'root'
-password_db = 'root'
-host_db = '192.168.1.155'
-database_db = 'teste'
+password_db = 'xxPyTtrTaRPpxyYyzDTnfkJkjGFHbvdh'
+host_db = 'roundhouse.proxy.rlwy.net'
+port_db = 52487
+database_db = 'railway'
 
-engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}/{database_db}')
+engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}:{port_db}/{database_db}')
 Session = sessionmaker(bind=engine)
 
 class UserSchema(Schema):
