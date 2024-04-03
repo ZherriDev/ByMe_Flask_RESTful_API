@@ -17,6 +17,7 @@ Session = sessionmaker(bind=engine)
 
 class UserSchema(Schema):
     name = fields.Str(required=True)
+    speciality = fields.Str(required=True)
     email = fields.Email(required=True)
     password = fields.Str(required=True)
     
@@ -40,8 +41,8 @@ def register_user():
         salt = bcrypt.gensalt()
         hash_password = bcrypt.hashpw(data['password'].encode('utf8'), salt)
         session.execute(
-            text("INSERT INTO usuarios (nome, email, senha, salt_senha) VALUES (:nome, :email, :senha, :salt_senha)"),
-            {'nome': data['name'], 'email': data['email'], 'senha': hash_password, 'salt_senha': salt},
+            text("INSERT INTO doctors (fullname, speciality, email, password, salt_pass) VALUES (:fullname, :speciality :email, :senha, :salt_senha)"),
+            {'fullname': data['name'], 'speciality': data['speciality'], 'email': data['email'], 'senha': hash_password, 'salt_senha': salt},
         )
         session.commit()
         return jsonify({'success': True}), 201
