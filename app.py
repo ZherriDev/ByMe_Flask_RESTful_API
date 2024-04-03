@@ -6,11 +6,11 @@ import bcrypt
 
 app = Flask(__name__)
 
-user_db = 'root'
-password_db = 'xxPyTtrTaRPpxyYyzDTnfkJkjGFHbvdh'
-host_db = 'roundhouse.proxy.rlwy.net'
-port_db = 52487
-database_db = 'railway'
+user_db = 'sql11696357'
+password_db = 'Qp4hRnMDZY'
+host_db = 'sql11.freesqldatabase.com'
+port_db = 3306
+database_db = 'sql11696357'
 
 engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}:{port_db}/{database_db}')
 Session = sessionmaker(bind=engine)
