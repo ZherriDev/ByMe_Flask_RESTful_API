@@ -4,13 +4,13 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import bcrypt
-from endpoints.auth import register_bp, login_bp
-
+from endpoints.auth.register import register_bp
+from endpoints.auth.login import login_bp
 
 app = Flask(__name__)
 
-app.register_blueprint(register_bp)
-app.register_blueprint(login_bp)
+app.register_blueprint(register_bp, url_prefix='/auth')
+app.register_blueprint(login_bp, url_prefix='/auth')
 
 class SelectDoctorSchema(Schema):
     search = fields.Str(required=True)
