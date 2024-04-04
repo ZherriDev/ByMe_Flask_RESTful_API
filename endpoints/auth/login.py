@@ -28,6 +28,7 @@ def login_user():
         ).fetchone()
         
         if result:
+            result = result._asdict()
             if bcrypt.checkpw(data['password'].encode('utf8'), result['password'].encode('utf8')):
                 return jsonify({'success': True, 'user': result}), 200
             else:

@@ -3,14 +3,14 @@ from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
 
-get_patient_bp = Blueprint('get_patient_bp', __name__)
+select_patient_bp = Blueprint('select_patient_bp', __name__)
 
 class ShowPatientSchema(Schema):
     doctor_id = fields.Int(required=True)
     order = fields.Str(required=False)
     state = fields.Str(required=False)
 
-@get_patient_bp.route('/show_patients', methods=['GET'])
+@select_patient_bp.route('/show_patients', methods=['POST'])
 def show_patients():
 
     data = request.get_json()

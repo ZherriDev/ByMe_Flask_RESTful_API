@@ -3,15 +3,15 @@ from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
 
-get_doctor_id_bp = Blueprint('get_doctor_id', __name__)
+select_doctor_bp = Blueprint('select_doctor', __name__)
 
-class SelectDoctorIDSchema(Schema):
-    doctor_id = fields.Int(required=True)
+class SelectDoctorSchema(Schema):
+    search = fields.Str(required=True)
 
-@get_doctor_id_bp.route('/select_doctor_id', methods=['GET'])
-def select_doctor_id():
+@select_doctor_bp.route('/select_doctor', methods=['POST'])
+def select_doctor():
     data = request.get_json()
-    schema = SelectDoctorIDSchema()
+    schema = SelectDoctorSchema()
     errors = schema.validate(data)
 
     if errors:
@@ -21,10 +21,10 @@ def select_doctor_id():
     
     try:
         result = session.execute(
-            text('SELECT * FROM doctors WHERE doctor_id = :doctor_id'),
-            {'doctor_id': data['doctor_id']}
+            text('SELECT * FROM doctors WHERE fullname LIKE "%:search%" OR speciality LIKE "%:search%" ORDER BY name ASC'),
+            {'search': data['search']}
         ).fetchall()
-        return jsonify({'success': True, 'doctor': result}), 200
+        return jsonify({'success': True, 'doctors': result}), 200
     except Exception as e:
         session.rollback()
         return jsonify({'error': str(e)}), 500
