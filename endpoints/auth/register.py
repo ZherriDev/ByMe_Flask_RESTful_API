@@ -1,10 +1,8 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint
 from marshmallow import Schema, fields
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+from sqlalchemy import text
 import bcrypt
-from ...db.conn import Session
+from ..conn import Session
 
 register_bp = Blueprint('register', __name__)
 
@@ -29,11 +27,11 @@ def register_user():
         salt = bcrypt.gensalt()
         hash_password = bcrypt.hashpw(data['password'].encode('utf8'), salt)
         session.execute(
-            text("INSERT INTO doctors (fullname, speciality, email, password) VALUES (:fullname, :speciality, :email, :senha"),
+            text("INSERT INTO doctors (fullname, speciality, email, password) VALUES (:fullname, :speciality, :email, :senha)"),
             {
-                'fullname': data['name'], 
-                'speciality': data['speciality'], 
-                'email': data['email'], 
+                'fullname': data['name'],
+                'speciality': data['speciality'],
+                'email': data['email'],
                 'senha': hash_password
             },
         )

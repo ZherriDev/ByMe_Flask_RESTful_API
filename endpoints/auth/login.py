@@ -1,10 +1,8 @@
-from flask import Flask, jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint
 from marshmallow import Schema, fields
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime
+from sqlalchemy import text
 import bcrypt
-from ...db.conn import Session
+from ..conn import Session
 
 login_bp = Blueprint('login', __name__)
 
