@@ -4,21 +4,13 @@ from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import bcrypt
+from endpoints.auth import register_bp, login_bp
+
 
 app = Flask(__name__)
 
-user_db = 'sql11696357'
-password_db = 'Qp4hRnMDZY'
-host_db = 'sql11.freesqldatabase.com'
-port_db = 3306
-database_db = 'sql11696357'
-
-engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}:{port_db}/{database_db}')
-Session = sessionmaker(bind=engine)
-
-class LoginSchema(Schema):
-    email = fields.Email(required=True)
-    password = fields.Str(required=True)
+app.register_blueprint(register_bp)
+app.register_blueprint(login_bp)
 
 class SelectDoctorSchema(Schema):
     search = fields.Str(required=True)
@@ -78,35 +70,6 @@ class ShowPatientSchema(Schema):
 @app.route('/', methods=['GET'])
 def index():
     return 'Olá'
-
-#!   L   O   G   I   N
-@app.route('/login', methods = ['POST'])
-def login_user():
-    data = request.get_json()
-    schema = LoginSchema()
-    errors = schema.validate(data)
-    
-    if errors:
-        return jsonify({'errors': errors}), 400
-    
-    session = Session()
-    
-    try:
-        result = session.execute(
-            text("SELECT * FROM doctors WHERE email = :email"),
-            {'email': data['email']},
-        ).fetchone()
-        
-        if result:
-            if bcrypt.checkpw(data['password'].encode('utf8'), result['password'].encode('utf8')):
-                return jsonify({'success': True, 'user': result}), 200
-            else:
-                return jsonify({'error': 'Palavra-passe incorreta'}), 400
-        else:
-            return jsonify({'error': 'Utilizador não encontrado'}), 400
-    except Exception as e:
-        session.rollback()
-        return jsonify({'error': str(e)}), 500
 
 #!   S   E   L   E   C   T   -   D   O   C   T   O   R
 @app.route('/select_doctor', methods=['GET'])

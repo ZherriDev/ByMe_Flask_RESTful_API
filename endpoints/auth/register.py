@@ -1,4 +1,12 @@
-from app import *
+from flask import Flask, jsonify, request, Blueprint
+from marshmallow import Schema, fields
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+import bcrypt
+from ...db.conn import Session
+
+register_bp = Blueprint('register', __name__)
 
 class RegisterSchema(Schema):
     name = fields.Str(required=True)
@@ -6,7 +14,7 @@ class RegisterSchema(Schema):
     email = fields.Email(required=True)
     password = fields.Str(required=True)
 
-@app.route('/register', methods = ['POST'])
+@register_bp.route('/register', methods = ['POST'])
 def register_user():
     data = request.get_json()
     schema = RegisterSchema()
