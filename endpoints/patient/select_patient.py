@@ -21,18 +21,18 @@ def show_patients():
 
     if errors:
         return jsonify({'errors': errors}), 400
-        
+    
+    order = data.get('order', None)
+    state = data.get('state', None)
     try:
-        order = data['order']
-        state = data['state']
+        text_state = ""
+        text_order = ""
         
         if order:
             if order == 'a-z':
                 text_order = " ORDER BY name ASC"
             elif order == 'recent':
                 text_order = " ORDER BY admission_date DESC"
-        else:
-            text_order = ""
         
         if state:
             if state == 'In Treatment':
@@ -41,16 +41,17 @@ def show_patients():
                 text_state = " AND status = 'Awaiting Treatment'"
             elif state == 'Completed Treatment':
                 text_state = " AND status = 'Completed Treatment'"
-        else:
-            text_state = ""
-        
+
+        patients = []
         sql = "SELECT * FROM patients WHERE doctor_id = :doctor_id{}{}"
         result = session.execute(
             text(sql.format(text_state, text_order)),
             {'doctor_id': data['doctor_id']}
         ).fetchall()
-            
-        return jsonify({'success': True, 'patients': result}), 200
+        for patient in result:
+            patient = patient._asdict()
+            patients.append(patient)
+        return jsonify({'success': True, 'patients': patients}), 200
     except Exception as e:
         session.rollback()
         return jsonify({'error': str(e)}), 500

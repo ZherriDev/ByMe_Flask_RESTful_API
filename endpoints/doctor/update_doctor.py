@@ -6,15 +6,16 @@ from ..conn import Session
 update_doctor_bp = Blueprint('update_doctor', __name__)
 
 class UpdateDoctorSchema(Schema):
-    id = fields.Int(required=True)
+    doctor_id = fields.Int(required=True)
     fullname = fields.Str(required=True)
+    photo = fields.Str(required=True)
     telephone = fields.Int(required=True)
     sex = fields.Str(required=True)
     birthdate = fields.Date(required=True)
     address = fields.Str(required=True)
     speciality = fields.Str(required=True)
 
-@update_doctor_bp.route('/update_doctor', methods=['UPDATE'])
+@update_doctor_bp.route('/update_doctor', methods=['PATCH'])
 def update_doctor():
     data = request.get_json()
     schema = UpdateDoctorSchema()
@@ -27,16 +28,18 @@ def update_doctor():
     
     try:
         result = session.execute(
-            text('UPDATE doctors SET fullname = :fullname, telephone = :telephone, sex = :sex, \
+            text('UPDATE doctors SET fullname = :fullname, photo = :photo, telephone = :telephone, sex = :sex, \
                 birthdate = :birthdate, address = :address, speciality = :speciality WHERE doctor_id = :id'),
             {
                 'fullname': data['fullname'], 
+                'photo': data['photo'],
                 'telephone': data['telephone'], 
                 'sex': data['sex'], 
                 'birthdate': data['birthdate'], 
                 'address': data['address'], 
                 'speciality': data['speciality'], 
-                'id': data['id']}
+                'id': data['doctor_id']
+            }
         )
         session.commit()
         return jsonify({'success': True}), 200

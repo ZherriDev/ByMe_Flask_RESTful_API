@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import text
 from ..conn import Session
 
-post_patient_bp = Blueprint('post_patient', __name__)
+insert_patient_bp = Blueprint('insert_patient', __name__)
 
 class InsertPatientSchema(Schema):
     doctor_id = fields.Int(required=True)
@@ -20,20 +20,20 @@ class InsertPatientSchema(Schema):
     nif = fields.Int(required=True)
     sns = fields.Int(required=True)
 
-@post_patient_bp.route('/insert_patient', methods=['POST'])
+@insert_patient_bp.route('/insert_patient', methods=['POST'])
 def insert_patient():
     data = request.get_json()
     schema = InsertPatientSchema()
     errors = schema.validate(data)
 
     if errors:
-        return jsonify({'errors': errors}), 400
+        return jsonify({'errors': errors, 'data': data}), 400
     
     session = Session()
     try:
         session.execute(
             text("INSERT INTO patients (name, telephone, email, sex, birthdate, address, postalcode, town, nif, \
-                sns, doctor_id, processnumber, admission_date) VALUES (:name, :telephone, :email, :sex, :birthdate, :address, :postcode, \
+                sns, doctor_id, processnumber, admission_date) VALUES (:name, :telephone, :email, :sex, :birthdate, :address, :postalcode, \
                 :town, :nif, :sns, :doctor_id, :processnumber, :admission_date)"),
             {
                 'name': data['name'], 

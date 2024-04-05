@@ -20,16 +20,20 @@ def select_doctor():
     session = Session()
     
     try:
+        doctors = []
         if data['search']:
             result = session.execute(
-                text('SELECT * FROM doctors WHERE fullname LIKE ":search" OR speciality LIKE ":search" ORDER BY fullname'),
+                text('SELECT * FROM doctors WHERE fullname LIKE :search OR speciality LIKE :search ORDER BY fullname'),
                 {'search': "%" + data['search'] + "%"}
             ).fetchall()
         else:
             result = session.execute(
                 text('SELECT * FROM doctors ORDER BY fullname'),
             ).fetchall()
-        return jsonify({'success': True, 'doctors': result}), 200
+        for doctor in result:
+            doctor = doctor._asdict()
+            doctors.append(doctor)
+        return jsonify({'success': True, 'doctors': doctors}), 200
     except Exception as e:
         session.rollback()
         return jsonify({'error': str(e)}), 500

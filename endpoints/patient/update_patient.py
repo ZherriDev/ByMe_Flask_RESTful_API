@@ -13,14 +13,13 @@ class UpdatePatientSchema(Schema):
     email = fields.Str(required=True)
     sex = fields.Str(required=True)
     birthdate = fields.Date(required=True)
-    processnumber = fields.Int(required=True)
     address = fields.Str(required=True)
     postalcode = fields.Str(required=True)
     town = fields.Str(required=True)
     nif = fields.Int(required=True)
     sns = fields.Int(required=True)
     
-@update_patient_bp.route('/update_patient', methods=['POST'])
+@update_patient_bp.route('/update_patient', methods=['PATCH'])
 def update_patient():
     data = request.get_json()
     schema = UpdatePatientSchema()
@@ -32,14 +31,10 @@ def update_patient():
     session = Session()
     
     try:
-        select = session.execute(
-            text('SELECT doctor_id FROM doctors WHERE patient_id = :patient_id'),
-            {'patient_id': data['patient_id']}
-        ).fetchone()
         
-        result = session.execute(
+        session.execute(
             text('UPDATE patients SET doctor_id = :doctor_id, name = :name, telephone = :telephone, email = :email, \
-                sex = :sex, birthdate = :birthdate, processnumber = :processnumber, address = :address, \
+                sex = :sex, birthdate = :birthdate, address = :address, \
                 postalcode = :postalcode, town = :town, nif = :nif, sns = :sns WHERE patient_id = :patient_id'),
             {
                 'doctor_id': data['doctor_id'], 
@@ -48,7 +43,6 @@ def update_patient():
                 'email': data['email'],
                 'sex': data['sex'], 
                 'birthdate': data['birthdate'], 
-                'processnumber': data['processnumber'], 
                 'address': data['address'],
                 'postalcode': data['postalcode'], 
                 'town': data['town'], 

@@ -23,7 +23,9 @@ def select_doctor_id():
         result = session.execute(
             text('SELECT * FROM doctors WHERE doctor_id = :doctor_id'),
             {'doctor_id': data['doctor_id']}
-        ).fetchall()
+        ).fetchone()
+        if result:
+            result = result._asdict()
         return jsonify({'success': True, 'doctor': result}), 200
     except Exception as e:
         session.rollback()

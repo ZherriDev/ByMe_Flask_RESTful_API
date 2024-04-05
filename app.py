@@ -8,7 +8,7 @@ from endpoints.doctor.select_doctor_id import select_doctor_id_bp
 from endpoints.doctor.delete_doctor import delete_doctor_bp
 from endpoints.doctor.update_doctor import update_doctor_bp
 
-from endpoints.patient.post_patient import post_patient_bp
+from endpoints.patient.insert_patient import insert_patient_bp
 from endpoints.patient.update_patient import update_patient_bp
 from endpoints.patient.delete_patient import delete_patient_bp
 from endpoints.patient.select_patient import select_patient_bp
@@ -23,7 +23,7 @@ app.register_blueprint(select_doctor_id_bp, url_prefix='/doctor')
 app.register_blueprint(delete_doctor_bp, url_prefix='/doctor')
 app.register_blueprint(update_doctor_bp, url_prefix='/doctor')
 
-app.register_blueprint(post_patient_bp, url_prefix='/patient')
+app.register_blueprint(insert_patient_bp, url_prefix='/patient')
 app.register_blueprint(select_patient_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_bp, url_prefix='/patient')
 app.register_blueprint(delete_patient_bp, url_prefix='/patient')
@@ -34,4 +34,4 @@ def index():
     return 'Olá'
 
 if __name__ == '__main__':
-    app.run(port=5000, host='localhost', debug=True)
+    app.run(port=5000, host='localhost', debug=False)

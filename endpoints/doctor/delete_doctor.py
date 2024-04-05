@@ -22,7 +22,7 @@ def delete_doctor():
     try:
         session.execute(
             text("DELETE FROM doctors WHERE doctor_id = :id"),
-            {'id': data['id']},
+            {'id': data['doctor_id']},
         )
         session.commit()
         return jsonify({'success': True}), 200
