@@ -16,11 +16,11 @@ def show_patients():
     data = request.get_json()
     schema = ShowPatientSchema()
     errors = schema.validate(data)
-    
-    session = Session()
 
     if errors:
         return jsonify({'errors': errors}), 400
+        
+    session = Session()
     
     order = data.get('order', None)
     state = data.get('state', None)
@@ -44,13 +44,16 @@ def show_patients():
 
         patients = []
         sql = "SELECT * FROM patients WHERE doctor_id = :doctor_id{}{}"
+        
         result = session.execute(
             text(sql.format(text_state, text_order)),
             {'doctor_id': data['doctor_id']}
         ).fetchall()
+        
         for patient in result:
             patient = patient._asdict()
             patients.append(patient)
+        
         return jsonify({'success': True, 'patients': patients}), 200
     except Exception as e:
         session.rollback()

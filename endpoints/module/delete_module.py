@@ -1,0 +1,33 @@
+from flask import jsonify, request, Blueprint
+from marshmallow import Schema, fields
+from sqlalchemy import text
+from ..conn import Session
+
+delete_module_bp = Blueprint('delete_module', __name__)
+
+class DeleteModuleSchema(Schema):
+    module_id = fields.Int(required=True)
+
+@delete_module_bp.route('/delete_module', methods=['DELETE'])
+def delete_module():
+    data = request.get_json()
+    schema = DeleteModuleSchema()
+    errors = schema.validate(data)
+
+    if errors:
+        return jsonify({'errors': errors}), 400
+    
+    session = Session()
+    
+    try:
+        session.execute(
+            text("DELETE FROM modules WHERE module_id = :id"),
+            {'id': data['module_id']},
+        )
+        session.commit()
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
+    finally:
+        session.close()
