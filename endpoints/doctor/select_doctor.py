@@ -20,10 +20,15 @@ def select_doctor():
     session = Session()
     
     try:
-        result = session.execute(
-            text('SELECT * FROM doctors WHERE fullname LIKE "%:search%" OR speciality LIKE "%:search%" ORDER BY name ASC'),
-            {'search': data['search']}
-        ).fetchall()
+        if data['search']:
+            result = session.execute(
+                text('SELECT * FROM doctors WHERE fullname LIKE ":search" OR speciality LIKE ":search" ORDER BY fullname'),
+                {'search': "%" + data['search'] + "%"}
+            ).fetchall()
+        else:
+            result = session.execute(
+                text('SELECT * FROM doctors ORDER BY fullname'),
+            ).fetchall()
         return jsonify({'success': True, 'doctors': result}), 200
     except Exception as e:
         session.rollback()
