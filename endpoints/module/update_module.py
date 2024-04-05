@@ -13,7 +13,7 @@ class UpdateModuleSchema(Schema):
     status = fields.String(required=True)
 
 @update_module_bp.route('/update_module', methods=['PATCH'])
-def insert_module():
+def update_module():
     data = request.get_json()
     schema = UpdateModuleSchema()
     errors = schema.validate(data)
@@ -24,7 +24,7 @@ def insert_module():
     session = Session()
     try:
         session.execute(
-            text("UPDATE module SET episode = :episode, module = :module, status = :status WHERE module = :module_id"),
+            text("UPDATE modules SET episode = :episode, module = :module, status = :status WHERE module_id = :module_id"),
             {
                 'module_id': data['module_id'],
                 'episode': data['episode'],
@@ -34,7 +34,7 @@ def insert_module():
             
         )
         session.commit()
-        return jsonify({'success': True}), 201
+        return jsonify({'success': True}), 200
     except Exception as e:
         session.rollback()
         return jsonify({'error': str(e)}), 500
