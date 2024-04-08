@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
@@ -21,6 +22,9 @@ from endpoints.patient.select_patient import select_patient_bp
 from endpoints.patient.update_patient_doctor import update_patient_doctor_bp
 
 app = Flask(__name__)
+
+app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<JZ6zA'
+jwt = JWTManager(app)
 
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')

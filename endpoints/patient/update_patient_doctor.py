@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -10,6 +11,7 @@ class UpdatePatientDoctorSchema(Schema):
     doctor_id = fields.Int(required=True)
 
 @update_patient_doctor_bp.route('/update_patient_doctor', methods=['PATCH'])
+@jwt_required()
 def update_patient_doctor():
     data = request.get_json()
     schema = UpdatePatientDoctorSchema()

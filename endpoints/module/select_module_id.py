@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -9,6 +10,7 @@ class SelectModuleIDSchema(Schema):
     module_id = fields.Int(required=True)
 
 @select_module_id_bp.route('/select_module_id', methods=['POST'])
+@jwt_required()
 def select_module_id():
     data = request.get_json()
     schema = SelectModuleIDSchema()

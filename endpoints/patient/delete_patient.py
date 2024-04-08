@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -9,6 +10,7 @@ class DeletePatientSchema(Schema):
     patient_id = fields.Int(required=True)
 
 @delete_patient_bp.route('/delete_patient', methods=['DELETE'])
+@jwt_required()
 def delete_patient():
     data = request.get_json()
     schema = DeletePatientSchema()

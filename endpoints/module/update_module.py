@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
@@ -13,6 +14,7 @@ class UpdateModuleSchema(Schema):
     status = fields.String(required=True)
 
 @update_module_bp.route('/update_module', methods=['PATCH'])
+@jwt_required()
 def update_module():
     data = request.get_json()
     schema = UpdateModuleSchema()

@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
@@ -21,6 +22,7 @@ class InsertPatientSchema(Schema):
     sns = fields.Int(required=True)
 
 @insert_patient_bp.route('/insert_patient', methods=['POST'])
+@jwt_required()
 def insert_patient():
     data = request.get_json()
     schema = InsertPatientSchema()

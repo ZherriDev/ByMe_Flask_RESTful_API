@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import create_access_token
 from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
@@ -30,11 +31,13 @@ def login_user():
         if result:
             result = result._asdict()
             if bcrypt.checkpw(data['password'].encode('utf8'), result['password'].encode('utf8')):
-                return jsonify({'success': True, 'user': result}), 200
+                user_claims = {'email': result['email'],}
+                token = create_access_token(identity=result['doctor_id'], additional_claims=user_claims)
+                return jsonify({'success': True, 'token': token}), 200
             else:
-                return jsonify({'error': 'Palavra-passe incorreta'}), 400
+                return jsonify({'error': 'Invalid Credentials'}), 401
         else:
-            return jsonify({'error': 'Utilizador não encontrado'}), 400
+            return jsonify({'error': 'Invalid Credentials'}), 401
     except Exception as e:
         session.rollback()
         return jsonify({'error': str(e)}), 500

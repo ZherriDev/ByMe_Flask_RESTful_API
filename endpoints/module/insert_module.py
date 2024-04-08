@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
@@ -13,6 +14,7 @@ class InsertModuleSchema(Schema):
     status = fields.String(required=True)
 
 @insert_module_bp.route('/insert_module', methods=['POST'])
+@jwt_required()
 def insert_module():
     data = request.get_json()
     schema = InsertModuleSchema()
