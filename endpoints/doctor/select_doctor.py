@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -9,10 +9,14 @@ select_doctor_bp = Blueprint('select_doctor', __name__)
 class SelectDoctorSchema(Schema):
     search = fields.Str(required=True)
 
-@select_doctor_bp.route('/select_doctor', methods=['POST'])
+@select_doctor_bp.route('/select_doctor/<search>', methods=['GET'])
 @jwt_required()
-def select_doctor():
-    data = request.get_json()
+def select_doctor(search):
+    token = verify_jwt_in_request()
+    if not token['fresh']:
+        return jsonify({'error': 'Expired token'})
+    
+    data = jsonify({'search': search})
     schema = SelectDoctorSchema()
     errors = schema.validate(data)
 

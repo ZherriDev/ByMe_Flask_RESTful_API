@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -9,10 +9,14 @@ select_module_id_bp = Blueprint('select_module_id', __name__)
 class SelectModuleIDSchema(Schema):
     module_id = fields.Int(required=True)
 
-@select_module_id_bp.route('/select_module_id', methods=['POST'])
+@select_module_id_bp.route('/select_module/<int:id>', methods=['GET'])
 @jwt_required()
-def select_module_id():
-    data = request.get_json()
+def select_module_id(id):
+    token = verify_jwt_in_request()
+    if not token['fresh']:
+        return jsonify({'error': 'Expired token'})
+    
+    data = jsonify({'module_id': id})
     schema = SelectModuleIDSchema()
     errors = schema.validate(data)
 

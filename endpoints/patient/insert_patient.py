@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
@@ -24,6 +24,10 @@ class InsertPatientSchema(Schema):
 @insert_patient_bp.route('/insert_patient', methods=['POST'])
 @jwt_required()
 def insert_patient():
+    token = verify_jwt_in_request()
+    if not token['fresh']:
+        return jsonify({'error': 'Expired token'})
+    
     data = request.get_json()
     schema = InsertPatientSchema()
     errors = schema.validate(data)

@@ -1,22 +1,34 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
 
-select_patient_bp = Blueprint('select_patient_bp', __name__)
+select_patient_bp = Blueprint('select_patient', __name__)
 
-class ShowPatientSchema(Schema):
+class SelectPatientSchema(Schema):
     doctor_id = fields.Int(required=True)
     order = fields.Str(required=False)
     state = fields.Str(required=False)
 
-@select_patient_bp.route('/show_patients', methods=['POST'])
+@select_patient_bp.route('/select_patient/<int:id>/<order>/<state>', methods=['GET'])
 @jwt_required()
-def show_patients():
+def select_patient(id):
+    token = verify_jwt_in_request()
+    if not token['fresh']:
+        return jsonify({'error': 'Expired token'})
+    
+    order = None
+    state = None
+    
+    if request.args.get('order'):
+        order = request.args.get('order')
+    
+    if request.args.get('state'):
+        state = request.args.get('state')
 
-    data = request.get_json()
-    schema = ShowPatientSchema()
+    data = jsonify({'doctor_id': id, 'order': order, 'state': state})
+    schema = SelectPatientSchema()
     errors = schema.validate(data)
 
     if errors:

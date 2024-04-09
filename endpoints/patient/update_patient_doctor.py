@@ -1,6 +1,7 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
+from datetime import datetime
 from sqlalchemy import text
 from ..conn import Session
 
@@ -13,6 +14,10 @@ class UpdatePatientDoctorSchema(Schema):
 @update_patient_doctor_bp.route('/update_patient_doctor', methods=['PATCH'])
 @jwt_required()
 def update_patient_doctor():
+    token = verify_jwt_in_request()
+    if not token['fresh']:
+        return jsonify({'error': 'Expired token'})
+    
     data = request.get_json()
     schema = UpdatePatientDoctorSchema()
     errors = schema.validate(data)
@@ -24,10 +29,11 @@ def update_patient_doctor():
     
     try:
         session.execute(
-            text("UPDATE patients SET doctor_id = :doctor_id WHERE patient_id = :patient_id"),
+            text("UPDATE patients SET doctor_id = :doctor_id, admission_date = :admission_date WHERE patient_id = :patient_id"),
             {
                 'patient_id': data['patient_id'],
-                'doctor_id': data['doctor_id']
+                'doctor_id': data['doctor_id'],
+                'admission_date': datetime.now()
             },
             
         )

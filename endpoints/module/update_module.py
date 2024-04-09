@@ -1,7 +1,6 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
-from datetime import datetime
 from sqlalchemy import text
 from ..conn import Session
 
@@ -16,6 +15,10 @@ class UpdateModuleSchema(Schema):
 @update_module_bp.route('/update_module', methods=['PATCH'])
 @jwt_required()
 def update_module():
+    token = verify_jwt_in_request()
+    if not token['fresh']:
+        return jsonify({'error': 'Expired token'})
+    
     data = request.get_json()
     schema = UpdateModuleSchema()
     errors = schema.validate(data)
