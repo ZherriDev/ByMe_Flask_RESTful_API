@@ -12,9 +12,6 @@ class SelectModuleIDSchema(Schema):
 @select_module_id_bp.route('/select_module/<int:id>', methods=['GET'])
 @jwt_required()
 def select_module_id(id):
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = jsonify({'module_id': id})
     schema = SelectModuleIDSchema()

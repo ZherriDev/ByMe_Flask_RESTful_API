@@ -12,9 +12,6 @@ class DeleteModuleSchema(Schema):
 @delete_module_bp.route('/delete_module', methods=['DELETE'])
 @jwt_required()
 def delete_module():
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = request.get_json()
     schema = DeleteModuleSchema()

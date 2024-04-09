@@ -12,9 +12,6 @@ class SelectDoctorSchema(Schema):
 @select_doctor_bp.route('/select_doctor/<search>', methods=['GET'])
 @jwt_required()
 def select_doctor(search):
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = jsonify({'search': search})
     schema = SelectDoctorSchema()

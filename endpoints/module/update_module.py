@@ -15,9 +15,6 @@ class UpdateModuleSchema(Schema):
 @update_module_bp.route('/update_module', methods=['PATCH'])
 @jwt_required()
 def update_module():
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = request.get_json()
     schema = UpdateModuleSchema()

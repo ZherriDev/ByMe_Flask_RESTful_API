@@ -14,9 +14,6 @@ class SelectPatientSchema(Schema):
 @select_patient_bp.route('/select_patient/<int:id>/<order>/<state>', methods=['GET'])
 @jwt_required()
 def select_patient(id):
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     order = None
     state = None

@@ -1,7 +1,6 @@
 from flask import jsonify, request, Blueprint
 from flask_jwt_extended import create_access_token
 from marshmallow import Schema, fields
-from datetime import datetime, UTC, timedelta
 from sqlalchemy import text
 import bcrypt
 from ..conn import Session
@@ -33,8 +32,7 @@ def login_user():
             result = result._asdict()
             if bcrypt.checkpw(data['password'].encode('utf8'), result['password'].encode('utf8')):
                 user_claims = {'email': result['email'],}
-                expires = datetime.now(UTC) + timedelta(hours=12)
-                token = create_access_token(identity=result['doctor_id'], additional_claims=user_claims, expires=expires)
+                token = create_access_token(identity=result['doctor_id'], additional_claims=user_claims)
                 return jsonify({'success': True, 'token': token}), 200
             else:
                 return jsonify({'error': 'Invalid Credentials'}), 401

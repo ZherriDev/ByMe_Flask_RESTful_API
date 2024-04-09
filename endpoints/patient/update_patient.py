@@ -23,9 +23,6 @@ class UpdatePatientSchema(Schema):
 @update_patient_bp.route('/update_patient', methods=['PATCH'])
 @jwt_required()
 def update_patient():
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = request.get_json()
     schema = UpdatePatientSchema()

@@ -12,9 +12,6 @@ class DeletePatientSchema(Schema):
 @delete_patient_bp.route('/delete_patient', methods=['DELETE'])
 @jwt_required()
 def delete_patient():
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = request.get_json()
     schema = DeletePatientSchema()

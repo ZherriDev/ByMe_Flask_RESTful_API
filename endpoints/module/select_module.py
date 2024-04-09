@@ -12,9 +12,6 @@ class ShowModuleSchema(Schema):
 @select_module_bp.route('/select_module/<int:id>', methods=['GET'])
 @jwt_required()
 def select_modules(id):
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = jsonify({'patient_id': id})
     schema = ShowModuleSchema()

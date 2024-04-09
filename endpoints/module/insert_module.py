@@ -16,9 +16,6 @@ class InsertModuleSchema(Schema):
 @insert_module_bp.route('/insert_module', methods=['POST'])
 @jwt_required()
 def insert_module():
-    token = verify_jwt_in_request()
-    if not token['fresh']:
-        return jsonify({'error': 'Expired token'})
     
     data = request.get_json()
     schema = InsertModuleSchema()
