@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs"
+      type="module"
+    ></script>
+    <title>Confirm Email Page</title>
+    <style>
+      body {
+        font-family: Lato, BlinkMacSystemFont, Segoe UI, Helvetica Neue, Arial,
+          sans-serif;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 80px 10px;
+      }
+      .icon {
+        width: 50%;
+      }
+      .description {
+        color: #344444;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <span id="icon"></span>
+      <h2 class="title" id="title"></h2>
+      <div class="description" id="description"></div>
+    </div>
+
+    <script>
+      const msg = "{{ msg }}";
+      const icon = document.getElementById("icon");
+      const title = document.getElementById("title");
+      const description = document.getElementById("description");
+
+      if (msg == "invalid key") {
+        icon.innerHTML = `<dotlottie-player
+         src="https://lottie.host/3eb04176-89cd-4327-aad7-969106d3321f/UAJnfC7ZRA.json"
+         background="transparent"
+         speed="0.5"
+         style="width: 250px; height: 250px"
+         autoplay
+         ></dotlottie-player>`;
+
+        title.innerHTML = "Something went wrong";
+
+        description.innerHTML =
+          "There has been an error processing your request.";
+      } else if (msg == "success") {
+        icon.innerHTML = `<dotlottie-player
+         src="https://lottie.host/12d0e86f-82a9-4da4-8c44-0959d6c45f7e/1Oc8kp6YYo.json"
+         background="transparent"
+         speed="0.7"
+         style="width: 250px; height: 250px"
+         autoplay
+         ></dotlottie-player>`;
+
+        title.innerHTML = "Email confirmation successful!";
+
+        description.innerHTML =
+          "You can now close this page and return to the application.";
+      }
+    </script>
+  </body>
+</html>

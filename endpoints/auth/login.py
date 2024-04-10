@@ -31,9 +31,12 @@ def login_user():
         if result:
             result = result._asdict()
             if bcrypt.checkpw(data['password'].encode('utf8'), result['password'].encode('utf8')):
-                user_claims = {'email': result['email'],}
-                token = create_access_token(identity=result['doctor_id'], additional_claims=user_claims)
-                return jsonify({'success': True, 'token': token}), 200
+                if result['email_ver'] == 1:
+                    user_claims = {'email': result['email'],}
+                    token = create_access_token(identity=result['doctor_id'], additional_claims=user_claims)
+                    return jsonify({'success': True, 'token': token}), 200
+                else:
+                    return jsonify({'error': 'Email is not yet verified'}), 401
             else:
                 return jsonify({'error': 'Invalid Credentials'}), 401
         else:

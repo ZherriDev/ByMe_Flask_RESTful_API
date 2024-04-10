@@ -3,6 +3,7 @@ from flask_mailman import EmailMultiAlternatives
 from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
+import hashlib
 from ..conn import Session
 
 register_bp = Blueprint('register', __name__)
@@ -27,21 +28,25 @@ def register_user():
     try:
         salt = bcrypt.gensalt()
         hash_password = bcrypt.hashpw(data['password'].encode('utf8'), salt)
+        
+        name = data['name']
+        email_key = hashlib.md5(data['email'].encode('utf8')).hexdigest()
+        
         session.execute(
-            text("INSERT INTO doctors (fullname, speciality, email, password) VALUES (:fullname, :speciality, :email, :senha)"),
+            text("INSERT INTO doctors (fullname, speciality, email, password, key_email) VALUES (:fullname, :speciality, :email, :senha, :key)"),
             {
-                'fullname': data['name'],
+                'fullname': name,
                 'speciality': data['speciality'],
                 'email': data['email'],
-                'senha': hash_password
+                'senha': hash_password,
+                'key': email_key
             },
         )
         session.commit()
         
-        subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', 'lucas18627@gmail.com'
+        subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', data['email']
         text_content = 'Teste'
-        name = data['name']
-        html_content = render_template("confirm_email.html", name=name)
+        html_content = render_template("confirm_email.html", name=name, email_hash=email_key)
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()

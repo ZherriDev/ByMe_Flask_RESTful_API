@@ -4,6 +4,7 @@ from flask_mailman import Mail, EmailMultiAlternatives
 
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
+from endpoints.auth.confirm_email import confirm_email_bp
 
 from endpoints.doctor.select_doctor import select_doctor_bp
 from endpoints.doctor.select_doctor_id import select_doctor_id_bp
@@ -38,6 +39,7 @@ mail = Mail(app)
 
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
+app.register_blueprint(confirm_email_bp, url_prefix='/auth')
 
 app.register_blueprint(select_doctor_bp, url_prefix='/doctor')
 app.register_blueprint(select_doctor_id_bp, url_prefix='/doctor')

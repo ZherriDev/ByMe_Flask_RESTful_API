@@ -804,7 +804,8 @@
                           padding: 10px 10px 10px 10px;
                         "
                       >
-                        <span
+                        <a
+                          href="https://api-py-byme.onrender.com/auth/confirm_email/{{ email_hash }}"
                           class="t27"
                           style="
                             display: block;
@@ -823,9 +824,12 @@
                             text-align: center;
                             mso-line-height-rule: exactly;
                             mso-text-raise: 2px;
+                            cursor: pointer;
+                            text-decoration: none;
                           "
-                          >Click Here</span
                         >
+                          Click Here
+                        </a>
                       </td>
                     </tr>
                   </table>
@@ -836,5 +840,10 @@
         </tr>
       </table>
     </div>
+    <script>
+      function getUrl(emailHash) {
+        return "http://localhost:5000/auth/confirm_email/" + emailHash;
+      }
+    </script>
   </body>
 </html>
