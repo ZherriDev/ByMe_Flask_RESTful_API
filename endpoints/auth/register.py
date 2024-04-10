@@ -1,4 +1,5 @@
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, render_template
+from flask_mailman import EmailMultiAlternatives
 from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
@@ -36,6 +37,15 @@ def register_user():
             },
         )
         session.commit()
+        
+        subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', 'lucas18627@gmail.com'
+        text_content = 'Teste'
+        name = data['name']
+        html_content = render_template("confirm_email.html", name=name)
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
+        
         return jsonify({'success': True}), 201
     except Exception as e:
         session.rollback()

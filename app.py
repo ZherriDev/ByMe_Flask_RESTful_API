@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_jwt_extended import JWTManager
+from flask_mailman import Mail, EmailMultiAlternatives
 
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
@@ -24,7 +25,16 @@ from endpoints.patient.update_patient_doctor import update_patient_doctor_bp
 app = Flask(__name__)
 
 app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<JZ6zA'
+
 jwt = JWTManager(app)
+
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'cinesquadd@gmail.com'
+app.config['MAIL_PASSWORD'] = 'pbeu qgam kcpn gchv'
+
+mail = Mail(app)
 
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
