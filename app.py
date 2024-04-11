@@ -1,10 +1,13 @@
-from flask import Flask, render_template
-from flask_jwt_extended import JWTManager
+from flask import Flask, render_template, jsonify
+from flask_jwt_extended import JWTManager, jwt_required
+from sqlalchemy import text
+from endpoints.conn import Session
 from flask_mailman import Mail, EmailMultiAlternatives
 
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
 from endpoints.auth.confirm_email import confirm_email_bp
+from endpoints.auth.logout import logout_bp
 
 from endpoints.doctor.select_doctor import select_doctor_bp
 from endpoints.doctor.select_doctor_id import select_doctor_id_bp
@@ -25,10 +28,6 @@ from endpoints.patient.update_patient_doctor import update_patient_doctor_bp
 
 app = Flask(__name__)
 
-app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<JZ6zA'
-
-jwt = JWTManager(app)
-
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -37,9 +36,27 @@ app.config['MAIL_PASSWORD'] = 'pbeu qgam kcpn gchv'
 
 mail = Mail(app)
 
+app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<JZ6zA'
+
+jwt = JWTManager(app)
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blacklist(jwt_header, jwt_data):
+    jti = jwt_data['jti']
+
+    session = Session()
+
+    result = session.execute(text("SELECT in_blacklist FROM sessions WHERE jti = :jti"),{'jti': jti},).fetchone()
+
+    if result[0] == 1:
+        return True
+    else:
+        return False
+        
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
 app.register_blueprint(confirm_email_bp, url_prefix='/auth')
+app.register_blueprint(logout_bp, url_prefix='/auth')
 
 app.register_blueprint(select_doctor_bp, url_prefix='/doctor')
 app.register_blueprint(select_doctor_id_bp, url_prefix='/doctor')
