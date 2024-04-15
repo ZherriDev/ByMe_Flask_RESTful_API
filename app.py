@@ -51,6 +51,7 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
 
     result = session.execute(text("SELECT in_blacklist FROM sessions WHERE jti = :jti"),{'jti': jti},).fetchone()
 
+    #Ola
     if result[0] == 1:
         return True
     else:
