@@ -30,9 +30,9 @@ def request_reset_pass(key):
             },
         ).fetchone()
 
-        id = result['doctor_id']
-
         if result:
+            result = result._asdict()
+            id = result['doctor_id']
             return render_template('reset_pass_form.html', id=id, key=data['key'])
         else:
             return jsonify({'errors': 'Invalid key'}), 400

@@ -31,7 +31,7 @@ def request_reset_pass():
         if result:
             result = result._asdict()
             id = result['doctor_id']
-            name = result['name']
+            name = result['fullname']
             pass_key = hashlib.md5(data['email'].encode('utf8')).hexdigest()
             
             subject, from_email, to = 'ByMe Information Technology - Reset Password', 'cinesquadd@gmail.com', data['email']

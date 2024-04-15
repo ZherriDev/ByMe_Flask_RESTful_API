@@ -93,6 +93,10 @@
       }
       #success {
         display: none;
+        color: #fff;
+        background-color: #01a709;
+        padding: 10px;
+        border-radius: 5px;
       }
       #error {
         display: none;
@@ -175,7 +179,9 @@
         <br /><br />
         <button type="submit" id="button">Submit</button>
         <br />
-        <span id="success">Success! You can now return to the application.</span>
+        <span id="success"
+          >Success! You can now return to the application.</span
+        >
         <span id="error"></span>
       </form>
     </div>
@@ -184,7 +190,7 @@
       const error = document.getElementById("error");
       const button = document.getElementById("button");
       const doctor_id = {{ id }};
-      const key = {{ key }};
+      const key = "{{ key }}";
 
       document
         .getElementById("passForm")
@@ -195,35 +201,48 @@
           const confirm_pass_value =
             document.getElementById("confirm_pass").value;
 
+          let isPassValid = true;
+
           if (pass_value.length < 8) {
             error.classList.add("shake_error");
             error.innerHTML =
               "Your password must be at least 8 characters long";
+            isPassValid = false;
           }
 
           if (!/[A-Z]/.test(pass_value)) {
             error.classList.add("shake_error");
             error.innerHTML =
               "Your password must have at least one capital letter";
+            isPassValid = false;
           }
 
           if (!/[a-z]/.test(pass_value)) {
             error.classList.add("shake_error");
             error.innerHTML =
               "Your password must have at least one lowercase letter";
+            isPassValid = false;
           }
 
           if (!/\d/.test(pass_value)) {
             error.classList.add("shake_error");
             error.innerHTML = "Your password must have at least one number";
+            isPassValid = false;
           }
 
           if (!/[@$!%*?&]/.test(pass_value)) {
             error.classList.add("shake_error");
             error.innerHTML = "Your password must have at least one symbol";
+            isPassValid = false;
           }
 
-          if (pass_value === confirm_pass_value) {
+          if (pass_value != confirm_pass_value) {
+            error.classList.add("shake_error");
+            error.innerHTML = "Passwords don't match";
+            isPassValid = false;
+          }
+
+          if (isPassValid) {
             const formData = {
               doctor_id: doctor_id,
               password: pass_value,
@@ -236,7 +255,7 @@
             width="20px"
             />`;
 
-            fetch("http://locahost:5000/auth/reset_pass_form", {
+            fetch("http://localhost:5000/auth/reset_pass_form", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(formData),
@@ -248,12 +267,9 @@
                   error.classList.add("shake_error");
                   error.innerHTML = "Something went wrong";
                 }
-              }).finnaly(() => {
+              }).finally(() => {
                 button.innerHTML = "Submit";
               });
-          } else {
-            error.classList.add("shake_error");
-            error.innerHTML = "Passwords don't match";
           }
 
           setTimeout(function () {
