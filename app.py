@@ -49,10 +49,11 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
 
     session = Session()
 
-    result = session.execute(text("SELECT in_blacklist FROM sessions WHERE jti = :jti"),{'jti': jti},).fetchone()
+    result = session.execute(
+        text("SELECT in_blacklist FROM sessions WHERE jti = :jti"),
+        {'jti': jti},
+    ).fetchone()
 
-    #Ola
-    #Ola2    
     if result[0] == 1:
         return True
     else:
