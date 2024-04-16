@@ -7,6 +7,7 @@ from flask_mailman import Mail, EmailMultiAlternatives
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
 from endpoints.auth.confirm_email import confirm_email_bp
+from endpoints.auth.confirm_new_email import confirm_new_email_bp
 from endpoints.auth.logout import logout_bp
 from endpoints.auth.request_reset_pass import request_reset_pass_bp
 from endpoints.auth.reset_pass import reset_pass_bp
@@ -62,6 +63,7 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
 app.register_blueprint(confirm_email_bp, url_prefix='/auth')
+app.register_blueprint(confirm_new_email_bp, url_prefix='/auth')
 app.register_blueprint(logout_bp, url_prefix='/auth')
 app.register_blueprint(request_reset_pass_bp, url_prefix='/auth')
 app.register_blueprint(reset_pass_bp, url_prefix='/auth')
