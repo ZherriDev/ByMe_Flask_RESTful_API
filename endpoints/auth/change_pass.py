@@ -57,9 +57,10 @@ def change_password():
 
             session.commit()
 
-            subject, from_email, to = 'ByMe Information Technology - Reset Password', 'cinesquadd@gmail.com', result['email']
-            text_content = f'Hi {name},\nYou have made a password change on our application\n'
-            html_content = render_template("change_pass.html", name=name)
+            subject, from_email, to = 'ByMe Information Technology - Password Change Notification', 'cinesquadd@gmail.com', result['email']
+            text_content = f'Hi {name},\nThere has been a change to your account password on our application.\n\
+                If you were not the one who changed your account password, please contact us about what happened: byme@support.com'
+            html_content = render_template("notification_pass_change.html", name=name)
             msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
