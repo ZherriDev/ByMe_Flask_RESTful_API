@@ -4,7 +4,6 @@ from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
 import bcrypt
-import socket
 import requests
 from ..conn import Session
 

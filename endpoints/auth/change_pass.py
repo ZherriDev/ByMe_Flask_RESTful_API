@@ -27,13 +27,15 @@ def change_password():
     session = Session()
 
     try:
-        result_old_pass = session.execute(text('SELECT password FROM doctors WHERE doctor_id = :doctor_id'),
+        result_old_pass = session.execute(text('SELECT * FROM doctors WHERE doctor_id = :doctor_id'),
             {
                 'doctor_id': data['doctor_id'],
             },
         ).fetchone()
         
-        if bcrypt.checkpw(data['old_password'].encode('utf8'), result_old_pass[0].encode('utf8')):
+        name = result_old_pass['fullname']
+
+        if bcrypt.checkpw(data['old_password'].encode('utf8'), result_old_pass['password'].encode('utf8')):
             salt = bcrypt.gensalt()
             hash_password = bcrypt.hashpw(data['new_password'].encode('utf8'), salt)
             session.execute(
@@ -53,6 +55,14 @@ def change_password():
             )
 
             session.commit()
+
+            subject, from_email, to = 'ByMe Information Technology - Reset Password', 'cinesquadd@gmail.com', data['email']
+            text_content = f'Hi {name},\nYou have made a password reset request on our application.\n\
+                Click here to reset yout password:\nhttps://api-py-byme.onrender.com/auth/reset_pass/{pass_key}'
+            html_content = render_template("reset_pass.html", name=name, pass_hash=pass_key)
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
         
             return jsonify({'success': True}), 200    
         else:
