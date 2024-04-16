@@ -60,7 +60,7 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
         return True
     else:
         return False
-    #ola
+   
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
 app.register_blueprint(confirm_email_bp, url_prefix='/auth')
