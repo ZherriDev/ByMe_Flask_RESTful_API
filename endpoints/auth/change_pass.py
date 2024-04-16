@@ -33,9 +33,10 @@ def change_password():
             },
         ).fetchone()
         
+        result = result_old_pass._asdict()
         name = result_old_pass['fullname']
 
-        if bcrypt.checkpw(data['old_password'].encode('utf8'), result_old_pass['password'].encode('utf8')):
+        if bcrypt.checkpw(data['old_password'].encode('utf8'), result['password'].encode('utf8')):
             salt = bcrypt.gensalt()
             hash_password = bcrypt.hashpw(data['new_password'].encode('utf8'), salt)
             session.execute(
@@ -56,10 +57,9 @@ def change_password():
 
             session.commit()
 
-            subject, from_email, to = 'ByMe Information Technology - Reset Password', 'cinesquadd@gmail.com', data['email']
-            text_content = f'Hi {name},\nYou have made a password reset request on our application.\n\
-                Click here to reset yout password:\nhttps://api-py-byme.onrender.com/auth/reset_pass/{pass_key}'
-            html_content = render_template("reset_pass.html", name=name, pass_hash=pass_key)
+            subject, from_email, to = 'ByMe Information Technology - Reset Password', 'cinesquadd@gmail.com', result['email']
+            text_content = f'Hi {name},\nYou have made a password change on our application\n'
+            html_content = render_template("change_pass.html", name=name)
             msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
