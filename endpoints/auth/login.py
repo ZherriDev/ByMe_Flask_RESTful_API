@@ -4,6 +4,8 @@ from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
 import bcrypt
+import socket
+import requests
 from ..conn import Session
 
 login_bp = Blueprint('login', __name__)
@@ -40,12 +42,34 @@ def login_user():
                     
                     jti = decoded_token['jti']
 
+                    def get_public_ip():
+
+                        try:
+                            response = requests.get('https://api.ipify.org')
+                            if response.status_code == 200:
+                                return response.text
+                            else:
+                                return None
+                        except Exception as e:
+                            print("Erro ao obter o IP público:", e)
+                            return None
+
+                    public_ip = get_public_ip()
+                    if public_ip:
+                        print("Seu endereço IP público é:", public_ip)
+                    else:
+                        print("Não foi possível obter o endereço IP público.")
+
+
+                    
+
                     session.execute(
                         text("INSERT INTO sessions (doctor_id, date_time, jti) VALUES (:doctor_id, :date_time, :jti)"),
                         {
                             'doctor_id': result['doctor_id'],
                             'date_time': datetime.now(),
                             'jti': jti,
+        
                         }
                     )
                     session.commit()
