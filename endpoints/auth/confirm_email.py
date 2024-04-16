@@ -35,8 +35,8 @@ def confirm_email(key):
                 text('UPDATE doctors SET key_email = NULL, email_ver = 1 WHERE key_email = :key'),
                 {'key': key}
             )
+            session.commit()
         
-        session.commit()
         return render_template('success.html', msg=msg)
     except Exception as e:
         session.rollback()
