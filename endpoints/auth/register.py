@@ -45,7 +45,7 @@ def register_user():
         session.commit()
         
         subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', data['email']
-        text_content = f'Hi {name},\nYour registration is almost complete in our application, we just need you to confirm your email.\n\
+        text_content = f'Hi {name},\nYour registration is almost complete on our application, we just need you to confirm your email.\n\
             Please confirm your email by clicking the link below:\nhttps://api-py-byme.onrender.com/auth/confirm_email/{email_key}'
         html_content = render_template("confirm_email.html", name=name, email_hash=email_key)
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
