@@ -30,22 +30,37 @@ def change_password():
     session = Session()
 
     try:
-        result = session.execute(
-            text('UPDATE doctors SET password = :password WHERE doctor_id = :doctor_id'),
+        result_old_pass = session.execute(text('SELECT password FROM doctors WHERE doctor_id = :doctor_id'),
             {
                 'doctor_id': data['doctor_id'],
             },
         ).fetchone()
-
-        if result:
+        
+        if bcrypt.checkpw(data['old_password'].encode('utf8'), result_old_pass[0].encode('utf8')):
+            session.execute(
+                text('UPDATE doictors SET password = :password WHERE doctor_id = :doctor_id'),
+                {
+                    'doctor_id': data['doctor_d'],
+                },
+            )
+            session.commit()
+        
+            
             session.execute(text('UPDATE sessions SET in_blacklist = 1 WHERE doctor_id = :doctor_id'),
                 {
                     'doctor_id': data['doctor_id'],
                 },
             )
 
+            session.commit()
+        
+            return jsonify({'success': True}), 200    
+        else:
+            return jsonify({'message': 'Invalid old password'}), 400
+        
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        session.rollback()
+        return jsonify({'error': str(e)}), 500
     finally:
         session.close()
     
