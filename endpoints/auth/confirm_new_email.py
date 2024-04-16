@@ -1,4 +1,5 @@
 from flask import jsonify, request, Blueprint, render_template
+from flask_jwt_extended import jwt_required, verify_jwt_in_request, decode_token
 from flask_mailman import EmailMultiAlternatives
 from marshmallow import Schema, fields
 from sqlalchemy import text
@@ -11,6 +12,7 @@ class ConfirmNewEmailSchema(Schema):
     key = fields.Str(required=True)
 
 @confirm_new_email_bp.route('/confirm_new_email/<key>', methods=['GET'])
+@jwt_required()
 def confirm_new_email(key):
     data = {'key': key}
     schema = ConfirmNewEmailSchema()
