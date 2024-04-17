@@ -113,7 +113,6 @@ app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 
 @app.route('/', methods=['GET'])
 def index():
-    logger.info('Acesso à página inicial', extra={'statuscode': 200, 'datetime': datetime.now(), 'method': 'GET'})
     return 'Olá'
 
 if __name__ == '__main__':
