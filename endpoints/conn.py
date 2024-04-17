@@ -1,5 +1,6 @@
-from sqlalchemy import create_engine
+from sqlalchemy import createengine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarativebase
 
 user_db = 'BymeDB_bricklift'
 password_db = 'e40f766b1e3ab2a917d8328d912757f02b0a8d82'
@@ -10,4 +11,9 @@ database_db = 'BymeDB_bricklift'
 engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}:{port_db}/{database_db}')
 Session = sessionmaker(bind=engine)
 
+Base = declarative_base()
 
+class Log(Base):
+    __tablename = "logs"
+
+    log_id = Column(Integer, primary_key=True)
