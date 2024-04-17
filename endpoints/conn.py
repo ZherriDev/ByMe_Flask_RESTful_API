@@ -14,7 +14,7 @@ Session = sessionmaker(bind=engine)
 Base = declarative_base()
 
 class Log(Base):
-    __tablename = "logs"
+    __tablename__ = "logs"
 
     log_id = Column(BigInteger, primary_key=True, autoincrement=True)
     level = Column(String, nullable=True)

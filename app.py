@@ -1,9 +1,8 @@
 from flask import Flask, render_template, jsonify
 from flask_jwt_extended import JWTManager, jwt_required
 from sqlalchemy import text
-from endpoints.conn import Session
+from endpoints.conn import Session, Log
 from flask_mailman import Mail, EmailMultiAlternatives
-from endpoints.conn import Log
 import logging
 
 from endpoints.auth.register import register_bp
@@ -63,21 +62,23 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
     else:
         return False
 
-logger = logging.getLogger(__name__)
-
-logger.basicConfig(format="%(message)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
-
 class DBHandler(logging.Handler):
     def emit(self, record):
         print(record)
         with Session() as session:
-            #levelname = record.levelname
-            #request_datetime = 
-            #msg = self.format(record)
-            #endpoint =
-            #method = 
-            #statuscode =
-            log = Log()
+            levelname = record.levelname
+            datetime = getattr(record, 'datetime', None)
+            msg = record.getMessage()
+            endpoint = record.pathname
+            method = getattr(record, 'method', None)
+            statuscode = getattr(record, 'statuscode', None)
+            log = Log(level=levelname, date_time=datetime, msg=msg, endpoint=endpoint, method=method, status_code=statuscode)
+            session.add(log)
+            session.commit()
+            
+            print(f'{levelname} [{datetime}] {msg} {endpoint} {method} {statuscode}')
+
+logger = logging.getLogger(__name__)
    
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
