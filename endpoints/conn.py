@@ -9,3 +9,5 @@ database_db = 'BymeDB_bricklift'
 
 engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}:{port_db}/{database_db}')
 Session = sessionmaker(bind=engine)
+
+
