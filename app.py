@@ -64,10 +64,10 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
         return False
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 class DBHandler(logging.Handler):
     def emit(self, record):
-        print(record)
         with Session() as session:
             levelname = record.levelname
             datetime = getattr(record, 'datetime', None)
@@ -113,7 +113,7 @@ app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 
 @app.route('/', methods=['GET'])
 def index():
-    logger.info('Acesso à página inicial', extra={'status_code': 200, 'datetime': datetime.now(), 'method': 'GET'})
+    logger.info('Acesso à página inicial', extra={'statuscode': 200, 'datetime': datetime.now(), 'method': 'GET'})
     return 'Olá'
 
 if __name__ == '__main__':
