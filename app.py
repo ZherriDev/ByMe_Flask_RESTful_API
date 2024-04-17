@@ -65,6 +65,14 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
 logger = logging.getLogger(__name__)
 
 logger.basicConfig(format="%(levelname)s:%(asctime)s:%(message)s:%(pathname)s:%(funcName)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
+
+class Log
+
+class DBHandler(logging.Handler):
+    def emit(self, record):
+        with Session() as session:
+            log_entry = self.format(record)
+            log = Log(log_entry = log_entry, created_at = datetime.now())
    
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
