@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify
 from flask_jwt_extended import JWTManager, jwt_required
 from sqlalchemy import text
+from datetime import datetime
 from endpoints.conn import Session, Log
 from flask_mailman import Mail, EmailMultiAlternatives
 import logging
@@ -112,6 +113,7 @@ app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 
 @app.route('/', methods=['GET'])
 def index():
+    logger.info('Acesso à página inicial', extra={'status_code': 200, 'datetime': datetime.now(), 'method': 'GET'})
     return 'Olá'
 
 if __name__ == '__main__':
