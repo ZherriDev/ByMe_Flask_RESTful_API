@@ -62,6 +62,8 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
     else:
         return False
 
+logger = logging.getLogger(__name__)
+
 class DBHandler(logging.Handler):
     def emit(self, record):
         print(record)
@@ -78,7 +80,8 @@ class DBHandler(logging.Handler):
             
             print(f'{levelname} [{datetime}] {msg} {endpoint} {method} {statuscode}')
 
-logger = logging.getLogger(__name__)
+db_handler = DBHandler()
+logger.addHandler(db_handler)
    
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
