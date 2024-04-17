@@ -83,7 +83,7 @@ class DBHandler(logging.Handler):
 
 db_handler = DBHandler()
 logger.addHandler(db_handler)
-   
+
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
 app.register_blueprint(confirm_email_bp, url_prefix='/auth')
