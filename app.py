@@ -64,7 +64,7 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
 
 logger = logging.getLogger(__name__)
 
-logger.basicConfig(format="%(levelname)s:%(asctime)s:%(message)s:%(pathname)s:%(funcName)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
+logger.basicConfig(format="%(message)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
    
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
