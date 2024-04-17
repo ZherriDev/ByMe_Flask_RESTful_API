@@ -69,8 +69,14 @@ logger.basicConfig(format="%(message)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
 
 class DBHandler(logging.Handler):
     def emit(self, record):
+        print(record)
         with Session() as session:
-            msg = self.format(record)
+            #levelname = record.levelname
+            #request_datetime = 
+            #msg = self.format(record)
+            #endpoint =
+            #method = 
+            #statuscode =
             log = Log()
    
 app.register_blueprint(register_bp, url_prefix='/auth')
