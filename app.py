@@ -6,6 +6,8 @@ from endpoints.conn import Session, Log
 from flask_mailman import Mail, EmailMultiAlternatives
 import logging
 
+from endpoints.admin.shutdown import shutdown_bp
+
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
 from endpoints.auth.confirm_email import confirm_email_bp
@@ -83,6 +85,8 @@ class DBHandler(logging.Handler):
 
 db_handler = DBHandler()
 logger.addHandler(db_handler)
+
+app.register_blueprint(shutdown_bp, url_prefix='/admin')
 
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
