@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, BigInteger, DateTime
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -16,4 +16,11 @@ Base = declarative_base()
 class Log(Base):
     __tablename = "logs"
 
-    log_id = Column(Integer, primary_key=True)
+    log_id = Column(BigInteger, primary_key=True, autoincrement=True)
+    level = Column(String, nullable=True)
+    date_time = Column(DateTime, nullable=True)
+    msg = Column(String, nullable=True)
+    endpoint = Column(String, nullable=True)
+    method = Column(String, nullable=True)
+    status_code = Column(Integer, nullable=True)
+
