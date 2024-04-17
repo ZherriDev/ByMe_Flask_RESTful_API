@@ -3,6 +3,7 @@ from flask_jwt_extended import JWTManager, jwt_required
 from sqlalchemy import text
 from endpoints.conn import Session
 from flask_mailman import Mail, EmailMultiAlternatives
+from endpoints.conn import Log
 import logging
 
 from endpoints.auth.register import register_bp
@@ -64,17 +65,13 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
 
 logger = logging.getLogger(__name__)
 
-logger.basicConfig(format="%(levelname)s:%(asctime)s:%(message)s:%(pathname)s:%(funcName)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
-
-class Log():
+logger.basicConfig(format="%(message)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
 
 class DBHandler(logging.Handler):
     def emit(self, record):
         with Session() as session:
             msg = self.format(record)
             log = Log()
-   
-logger.basicConfig(format="%(message)s", datefmt="%a, %d/%b/%Y %H:%M:%S")
    
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
