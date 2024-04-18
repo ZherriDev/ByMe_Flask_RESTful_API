@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, verify_jwt_in_request, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -16,8 +16,6 @@ class SelectPatientSchema(Schema):
 @jwt_required()
 def select_patient(id):
 
-    doctor_id = get_jwt_identity()
-
     order = None
     state = None
     
@@ -32,13 +30,11 @@ def select_patient(id):
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid request made by Doctor ID: {doctor_id}", extra={"method": "GET", "statuscode": 400})
+        logger.error(f"Invalid patient select request made by Doctor ID:{data['doctor_id']}.", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
         
     session = Session()
     
-    order = data.get('order', None)
-    state = data.get('state', None)
     try:
         text_state = ""
         text_order = ""
@@ -69,11 +65,11 @@ def select_patient(id):
             patient = patient._asdict()
             patients.append(patient)
         
-        logger.info(f"Doctor ID: {doctor_id} selected Patients", extra={"method": "GET", "statuscode": 200})
+        logger.info(f"Doctor ID:{data['doctor_id']} selected Patients.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'patients': patients}), 200
     except Exception as e:
         session.rollback()
-        logger.error(f"Doctor ID: {doctor_id} tried to select Patients", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
+        logger.error(f"Doctor ID:{data['doctor_id']}'s attempt to select Patients failed.", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

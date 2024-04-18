@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, verify_jwt_in_request, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
@@ -33,10 +33,11 @@ def insert_patient():
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid request made by Doctor ID: {doctor_id}", extra={"method": "POST", "statuscode": 400})
+        logger.error(f"Invalid patient insert request made by Doctor ID:{doctor_id}.", extra={"method": "POST", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
+    
     try:
         session.execute(
             text("INSERT INTO patients (name, telephone, email, sex, birthdate, address, postalcode, town, nif, \
@@ -60,11 +61,14 @@ def insert_patient():
             
         )
         session.commit()
-        logger.info(f"Doctor ID: {doctor_id} created a new Patient", extra={"method": "POST", "statuscode": 201})
+        
+        patient_id = session.execute("SELECT last_insert_rowid()").scalar()
+        
+        logger.info(f"Doctor ID:{doctor_id} created a new Patient ID:{patient_id}.", extra={"method": "POST", "statuscode": 201})
         return jsonify({'success': True}), 201
     except Exception as e:
         session.rollback()
-        logger.error(f"Doctor ID: {doctor_id} tried to insert Patient", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
+        logger.error(f"Doctor ID:{doctor_id}'s attempt to insert a Patient failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

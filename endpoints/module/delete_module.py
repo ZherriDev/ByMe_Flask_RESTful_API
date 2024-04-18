@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, verify_jwt_in_request, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -21,7 +21,7 @@ def delete_module():
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid request made by Doctor ID: {doctor_id}", extra={"method": "DELETE", "statuscode": 400})
+        logger.error(f"Invalid module delete request made by Doctor ID: {doctor_id}.", extra={"method": "DELETE", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -33,11 +33,12 @@ def delete_module():
             {'id': module_id},
         )
         session.commit()
-        logger.info(f"Doctor ID: {doctor_id} deleted module ID: {module_id}", extra={"method": "DELETE", "statuscode": 200})
+        
+        logger.info(f"Doctor ID:{doctor_id} deleted Module ID:{module_id}.", extra={"method": "DELETE", "statuscode": 200})
         return jsonify({'success': True}), 200
     except Exception as e:
         session.rollback()
-        logger.error(f"Doctor ID: {doctor_id} tried to delete Module ID: {module_id}", extra={"method": "DELETE", "statuscode": 500, "exc": str(e)})
+        logger.error(f"Doctor ID:{doctor_id}'s attempt to delete Module ID:{module_id} failed.", extra={"method": "DELETE", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
