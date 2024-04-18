@@ -94,8 +94,6 @@ app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 
 @app.route('/', methods=['GET'])
 def index():
-    ip = request.environ['REMOTE_ADDR']
-    print(ip)
     return 'Olá'
 
 if __name__ == '__main__':

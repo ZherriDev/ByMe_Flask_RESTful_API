@@ -27,13 +27,14 @@ def shutdown():
         
         if isAdmin == 1:
             subprocess.Popen("pkill -f 'gunicorn'", shell=True)
-            logger.critical(f"Admin {name} turned off the server.", extra={"method": "GET", "statuscode": 200, "datetime": datetime.now()})
+            logger.critical(f"Admin {name} shut down the server.", extra={"method": "GET", "statuscode": 200})
             return jsonify({'success': True, 'msg': 'Shutting down...'}), 200
         else:
-            logger.warning(f"", extra={"method": "GET", "statuscode": 403, "datetime": datetime.now()})
+            logger.warning(f"Someone tried to shut down the server without permission.", extra={"method": "GET", "statuscode": 403})
             return jsonify({'error': 'Access Denied'}), 403
     except Exception as e:
         session.rollback()
+        logger.warning(str(e), extra={"method": "GET", "statuscode": 500})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

@@ -13,7 +13,7 @@ class DBHandler(logging.Handler):
             endpoint = record.pathname
             method = getattr(record, 'method', None)
             statuscode = getattr(record, 'statuscode', None)
-            log = Log(level=levelname, date_time=datetime, msg=msg, endpoint=endpoint, method=method, status_code=statuscode)
+            log = Log(level=levelname, date_time=datetime, msg=msg, path=endpoint, method=method, status_code=statuscode)
             session.add(log)
             session.commit()
             
