@@ -1,10 +1,8 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_jwt_extended import JWTManager, jwt_required
 from sqlalchemy import text
-from datetime import datetime
-from endpoints.conn import Session, Log
-from flask_mailman import Mail, EmailMultiAlternatives
-import logging
+from endpoints.conn import Session
+from flask_mailman import Mail
 
 from endpoints.admin.shutdown import shutdown_bp
 
@@ -65,27 +63,6 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
     else:
         return False
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-
-class DBHandler(logging.Handler):
-    def emit(self, record):
-        with Session() as session:
-            levelname = record.levelname
-            datetime = getattr(record, 'datetime', None)
-            msg = record.getMessage()
-            endpoint = record.pathname
-            method = getattr(record, 'method', None)
-            statuscode = getattr(record, 'statuscode', None)
-            log = Log(level=levelname, date_time=datetime, msg=msg, endpoint=endpoint, method=method, status_code=statuscode)
-            session.add(log)
-            session.commit()
-            
-            print(f'{levelname} [{datetime}] {msg} {endpoint} {method} {statuscode}')
-
-db_handler = DBHandler()
-logger.addHandler(db_handler)
-
 app.register_blueprint(shutdown_bp, url_prefix='/admin')
 
 app.register_blueprint(register_bp, url_prefix='/auth')
@@ -117,6 +94,8 @@ app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 
 @app.route('/', methods=['GET'])
 def index():
+    ip = request.remote_addr
+    print(ip)
     return 'Olá'
 
 if __name__ == '__main__':
