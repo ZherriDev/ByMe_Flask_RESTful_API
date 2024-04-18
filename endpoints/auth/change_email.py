@@ -75,7 +75,7 @@ def change_email():
             return jsonify({'error': 'Invalid email address'}), 401
     except Exception as e:
         session.rollback()
-        logger.info(f"Doctor ID:{doctor_id}'s attempt to change the email failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
+        logger.info(f"Doctor ID:{doctor_id}'s attempt to change his email failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
