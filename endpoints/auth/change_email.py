@@ -1,11 +1,12 @@
 from flask import jsonify, request, Blueprint, render_template
-from flask_jwt_extended import jwt_required, verify_jwt_in_request, decode_token
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_mailman import EmailMultiAlternatives
 from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
 import hashlib
 from ..conn import Session
+from ..logger import logger
 
 change_email_bp = Blueprint('change_email', __name__)
 
@@ -20,8 +21,10 @@ def change_email():
     data = request.get_json()
     schema = ChangeEmail()
     errors = schema.validate(data)
+    doctor_id = get_jwt_identity()
     
     if errors:
+        logger.error(f"Invalid request made by Doctor ID:{doctor_id}.", extra={"method": "POST", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -65,11 +68,14 @@ def change_email():
             msg.attach_alternative(html_content, "text/html")
             msg.send()
             
+            logger.info(f"Doctor ID:{doctor_id} changed your email from {old_email} to {new_email}.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'success': True}), 200
         else:
-            return jsonify({'error': 'Invalid email address'})
+            logger.info(f"Doctor ID:{doctor_id} tried to change his email but the old_email was invalid.", extra={"method": "POST", "statuscode": 401})
+            return jsonify({'error': 'Invalid email address'}), 401
     except Exception as e:
         session.rollback()
+        logger.info(f"Doctor ID:{doctor_id}'s attempt to change the email failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

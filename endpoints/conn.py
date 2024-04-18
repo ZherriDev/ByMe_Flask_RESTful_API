@@ -34,6 +34,7 @@ class Log(Base):
     level = Column(String, nullable=True)
     date_time = Column(DateTime, nullable=True)
     msg = Column(String, nullable=True)
+    exception = Column(String, nullable=True)
     path = Column(String, nullable=True)
     method = Column(String, nullable=True)
     status_code = Column(Integer, nullable=True)

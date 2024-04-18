@@ -10,14 +10,15 @@ class DBHandler(logging.Handler):
             levelname = record.levelname
             datetime = record.asctime
             msg = record.getMessage()
+            exc = getattr(record, 'exc', None)
             endpoint = record.pathname
             method = getattr(record, 'method', None)
             statuscode = getattr(record, 'statuscode', None)
-            log = Log(level=levelname, date_time=datetime, msg=msg, path=endpoint, method=method, status_code=statuscode)
+            log = Log(level=levelname, date_time=datetime, msg=msg, exception=exc, path=endpoint, method=method, status_code=statuscode)
             session.add(log)
             session.commit()
             
-            print(f'{levelname} [{datetime}] {msg} {endpoint} {method} {statuscode}')
+            print(f'{levelname} [{datetime}] {msg} !{exc}! {endpoint} {method} {statuscode}')
 
 db_handler = DBHandler()
 logger.addHandler(db_handler)
