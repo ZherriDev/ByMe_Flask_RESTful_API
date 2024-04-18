@@ -1,0 +1,8 @@
+CRITICAL : Failed to establish database connection. Application shutting down : 2024-04-18 10:53:42,686
+CRITICAL : Failed to establish database connection. Application shutting down : 2024-04-18 10:54:37,324
+INFO : Sucessfully connected to database : 2024-04-18 10:54:50,711
+CRITICAL : Failed to establish database connection. Application shutting down : 2024-04-18 10:58:24,442
+CRITICAL : Failed to establish database connection. Application shutting down : 2024-04-18 11:00:40,741
+CRITICAL : Failed to establish database connection. Application shutting down : 2024-04-18 11:01:25,470
+CRITICAL : Failed to establish database connection. Application shutting down : 2024-04-18 11:04:46,667
+INFO : Sucess fully connected to database : 2024-04-18 11:05:06,722
