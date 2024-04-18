@@ -63,7 +63,7 @@ def update_patient():
         return jsonify({'success': True}), 200
     except Exception as e:
         session.rollback()
-        logger.error(str(e), extra={"method": "PATCH", "statuscode": 500})
+        logger.error(f"Doctor ID: {doctor_id} tried to update Patient ID: {patient_id}", extra={"method": "PATCH", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

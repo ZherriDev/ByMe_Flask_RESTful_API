@@ -64,7 +64,7 @@ def insert_patient():
         return jsonify({'success': True}), 201
     except Exception as e:
         session.rollback()
-        logger.error(str(e), extra={"method": "POST", "statuscode": 500})
+        logger.error(f"Doctor ID: {doctor_id} tried to insert Patient", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

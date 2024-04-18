@@ -39,7 +39,7 @@ def select_module_id(id):
         return jsonify({'success': True, 'module': result}), 200
     except Exception as e:
         session.rollback()
-        logger.warning(str(e), extra={"methos": "GET", "statuscode": 500})
+        logger.error(f"Doctor ID: {doctor_id} tried to select Module ID: {module_id}", extra={"methos": "GET", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
