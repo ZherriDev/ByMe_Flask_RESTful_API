@@ -5,6 +5,7 @@ from sqlalchemy import text
 import bcrypt
 import hashlib
 from ..conn import Session
+from ..logger import logger
 
 register_bp = Blueprint('register', __name__)
 
@@ -21,6 +22,7 @@ def register_user():
     errors = schema.validate(data)
     
     if errors:
+        logger.error(f"Invalid registration request made", extra={"method": "POST", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -44,6 +46,8 @@ def register_user():
         )
         session.commit()
         
+        doctor_id = session.execute("SELECT last_insert_rowid()").scalar()
+        
         subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', data['email']
         text_content = f'Hi {name},\nYour registration is almost complete on our application, we just need you to confirm your email.\n\
             Please confirm your email by clicking the link below:\nhttps://api-py-byme.onrender.com/auth/confirm_email/{email_key}'
@@ -52,9 +56,11 @@ def register_user():
         msg.attach_alternative(html_content, "text/html")
         msg.send()
         
+        logger.info(f"Doctor ID:{doctor_id} registration was successful.", extra={"method": "POST", "statuscode": 201})
         return jsonify({'success': True}), 201
     except Exception as e:
         session.rollback()
+        logger.error(f"A registration attempt failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

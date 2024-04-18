@@ -4,6 +4,7 @@ from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
 from ..conn import Session
+from ..logger import logger
 
 confirm_email_bp = Blueprint('confirm_email', __name__)
 
@@ -17,6 +18,7 @@ def confirm_email(key):
     errors = schema.validate(data)
     
     if errors:
+        logger.error(f"Invalid request made", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -30,16 +32,20 @@ def confirm_email(key):
 
         if not result:
             msg = 'invalid key'
-        else:  
+            logger.warning(f"Invalid email key request made.", extra={"method": "GET", "statuscode": 401})
+        else:
+            result = result._asdict()
             session.execute(
                 text('UPDATE doctors SET key_email = NULL, email_ver = 1 WHERE key_email = :key'),
                 {'key': key}
             )
             session.commit()
+            logger.info(f"The email {result['email']} has been confirmed.", extra={"method": "GET", "statuscode": 200})
         
         return render_template('success.html', msg=msg)
     except Exception as e:
         session.rollback()
+        logger.error(f"An email confirmation attempt failed.", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
