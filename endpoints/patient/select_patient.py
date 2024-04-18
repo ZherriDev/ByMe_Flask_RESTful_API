@@ -73,7 +73,7 @@ def select_patient(id):
         return jsonify({'success': True, 'patients': patients}), 200
     except Exception as e:
         session.rollback()
-        logger.error(f"Doctor ID: {doctor_id} tried to select Patiend", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
+        logger.error(f"Doctor ID: {doctor_id} tried to select Patients", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
