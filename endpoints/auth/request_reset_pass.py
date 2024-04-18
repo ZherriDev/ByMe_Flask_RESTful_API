@@ -5,6 +5,7 @@ from sqlalchemy import text
 import bcrypt
 import hashlib
 from ..conn import Session
+from ..logger import logger
 
 request_reset_pass_bp = Blueprint('request_reset_pass', __name__)
 
@@ -18,6 +19,7 @@ def request_reset_pass():
     errors = schema.validate(data)
     
     if errors:
+        logger.error(f"Invalid password reset request made", extra={"method": "POST", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -51,12 +53,15 @@ def request_reset_pass():
             )
             session.commit()
             
+            logger.info(f"Doctor ID:{id} made a request to reset password.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'success': True, 'message': 'Email sent'}), 200
         else:
+            logger.warning(f"Email not found in a password reset request.", extra={"method": "POST", "statuscode": 400})
             return jsonify({'errors': 'Email not found'}), 400
         
     except Exception as e:
         session.rollback()
+        logger.error(f"A password reset attempt failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'errors': str(e)}), 500
     finally:
         session.close()

@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import text
 import bcrypt
 from ..conn import Session
+from ..logger import logger
 
 login_bp = Blueprint('login', __name__)
 
@@ -23,6 +24,7 @@ def login_user():
     errors = schema.validate(data)
     
     if errors:
+        logger.error(f"Invalid login request made", extra={"method": "POST", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -60,15 +62,20 @@ def login_user():
                         }
                     )
                     session.commit()
+                    logger.info(f"Doctor ID:{result['doctor_id']} logged in.", extra={"method": "POST", "statuscode": 200})
                     return jsonify({'success': True, 'token': token}), 200
                 else:
-                    return jsonify({'error': 'Email is not yet verified'}), 401
+                    logger.warning(f"Doctor ID:{result['doctor_id']}'s login attempt was denied. Email not confirmed.", extra={"method": "POST", "statuscode": 403})
+                    return jsonify({'error': 'Email is not yet verified'}), 403
             else:
+                logger.warning(f"Doctor ID:{result['doctor_id']} entered the incorrect password.", extra={"method": "POST", "statuscode": 401})
                 return jsonify({'error': 'Invalid Credentials'}), 401
         else:
+            logger.warning(f"Doctor ID:{result['doctor_id']} entered the incorrect credentials.", extra={"method": "POST", "statuscode": 401})
             return jsonify({'error': 'Invalid Credentials'}), 401
     except Exception as e:
         session.rollback()
+        logger.error(f"A login attempt failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

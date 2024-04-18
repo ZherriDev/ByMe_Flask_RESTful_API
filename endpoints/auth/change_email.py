@@ -71,11 +71,11 @@ def change_email():
             logger.info(f"Doctor ID:{doctor_id} changed your email from {old_email} to {new_email}.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'success': True}), 200
         else:
-            logger.info(f"Doctor ID:{doctor_id} tried to change his email but the old_email was invalid.", extra={"method": "POST", "statuscode": 401})
+            logger.warning(f"Doctor ID:{doctor_id} tried to change his email but the old_email was invalid.", extra={"method": "POST", "statuscode": 401})
             return jsonify({'error': 'Invalid email address'}), 401
     except Exception as e:
         session.rollback()
-        logger.info(f"Doctor ID:{doctor_id}'s attempt to change his email failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
+        logger.error(f"Doctor ID:{doctor_id}'s attempt to change his email failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

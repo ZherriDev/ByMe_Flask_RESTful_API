@@ -3,8 +3,8 @@ from flask_mailman import EmailMultiAlternatives
 from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
-import hashlib
 from ..conn import Session
+from ..logger import logger
 
 reset_pass_form_bp = Blueprint('reset_pass_form', __name__)
 
@@ -20,6 +20,7 @@ def reset_pass_form():
     errors = schema.validate(data)
 
     if errors:
+        logger.error(f"Invalid new password request made", extra={"method": "POST", "statuscode": 400})
         return jsonify(errors), 400
     
     session = Session()
@@ -35,6 +36,7 @@ def reset_pass_form():
         ).fetchone()
 
         if result:
+            result = result._asdict()
             session.execute(text("UPDATE doctors SET key_pass = NULL, password = :password WHERE doctor_id = :doctor_id"),
                 {
                     'password': hash_password,
@@ -42,11 +44,14 @@ def reset_pass_form():
                 }
             )
             session.commit()
+            logger.info(f"Doctor ID:{result['doctor_id']} reset his password", extra={"method": "POST", "statuscode": 200})
             return jsonify({'message': 'Password reset successfully'}), 200
         else:
+            logger.warning(f"Invalid password key request made.", extra={"method": "POST", "statuscode": 400})
             return jsonify({'message': 'Invalid key'}), 400
     except Exception as e:
         session.rollback()
+        logger.error(f"A new password request failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'message': str(e)}), 500
     finally:
         session.close()
