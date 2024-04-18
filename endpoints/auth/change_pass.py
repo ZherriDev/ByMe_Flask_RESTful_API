@@ -1,10 +1,11 @@
 from flask import jsonify, request, Blueprint, render_template
 from flask_mailman import EmailMultiAlternatives
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from marshmallow import Schema, fields
 from sqlalchemy import text
 import bcrypt
 from ..conn import Session
+from ..logger import logger
 
 change_password_bp = Blueprint('change_password', __name__)
 
@@ -20,8 +21,10 @@ def change_password():
     data = request.get_json()
     schema = ChangePasswordSchema()
     errors = schema.validate(data)
+    doctor_id = get_jwt_identity()
 
     if errors:
+        logger.error(f"Invalid request made by Doctor ID:{doctor_id}.", extra={"method": "POST", "statuscode": 400})
         return jsonify(errors), 400
         
     session = Session()
@@ -64,13 +67,16 @@ def change_password():
             msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
             msg.attach_alternative(html_content, "text/html")
             msg.send()
-        
+
+            logger.info(f"Doctor ID:{doctor_id} changed his password.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'success': True}), 200    
         else:
+            logger.info(f"Doctor ID:{doctor_id} tried to change his password but the old_password was invalid.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'message': 'Invalid old password'}), 400
         
     except Exception as e:
         session.rollback()
+        logger.info(f"Doctor ID:{doctor_id}'s attempt to change his password failed.", extra={"method": "POST", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
