@@ -4,7 +4,6 @@ from marshmallow import Schema, fields
 from datetime import datetime
 from sqlalchemy import text
 import bcrypt
-import requests
 from ..conn import Session
 
 login_bp = Blueprint('login', __name__)
@@ -39,6 +38,8 @@ def login_user():
             if bcrypt.checkpw(data['password'].encode('utf8'), result['password'].encode('utf8')):
                 if result['email_ver'] == 1:
                     user_claims = {'email': result['email'],}
+                    if result['admin'] == 1:
+                        user_claims['admin'] = 1
                     token = create_access_token(identity=result['doctor_id'], additional_claims=user_claims, expires_delta=False)
                     
                     decoded_token = decode_token(token)
