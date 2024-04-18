@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
+from ..logger import logger
 
 update_doctor_bp = Blueprint('update_doctor', __name__)
 
@@ -25,6 +26,7 @@ def update_doctor():
     errors = schema.validate(data)
     
     if errors:
+        logger.error(f"Invalid update doctor request made", extra={"method": "UPDATE", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -45,9 +47,12 @@ def update_doctor():
             }
         )
         session.commit()
+        
+        logger.info(f"Doctor ID:{data['doctor_id']} made an update to his profile.", extra={"method": "UPDATE", "statuscode": 200})
         return jsonify({'success': True}), 200
     except Exception as e:
         session.rollback()
+        logger.error(f"An attempt to update Doctor ID:{data['doctor_id']} profile failed.", extra={"method": "UPDATE", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

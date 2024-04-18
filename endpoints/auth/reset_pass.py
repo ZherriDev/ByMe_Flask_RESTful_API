@@ -43,7 +43,7 @@ def request_reset_pass(key):
             return jsonify({'errors': 'Invalid key'}), 400
         
     except Exception as e:
-        logger.error(f"A password reset request failed.", extra={"method": "GET", "statuscode": 500})
+        logger.error(f"A password reset request failed.", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
         return jsonify({'errors': str(e)}), 500
     finally:
         session.close()

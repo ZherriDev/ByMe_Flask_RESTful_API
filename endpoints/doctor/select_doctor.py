@@ -3,6 +3,7 @@ from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
+from ..logger import logger
 
 select_doctor_bp = Blueprint('select_doctor', __name__)
 
@@ -18,6 +19,7 @@ def select_doctor(search):
     errors = schema.validate(data)
 
     if errors:
+        logger.error(f"Invalid select doctor request made", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -33,12 +35,16 @@ def select_doctor(search):
             result = session.execute(
                 text('SELECT * FROM doctors ORDER BY fullname'),
             ).fetchall()
+            
         for doctor in result:
             doctor = doctor._asdict()
             doctors.append(doctor)
+        
+        logger.info(f"Selection of {data['search']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'doctors': doctors}), 200
     except Exception as e:
         session.rollback()
+        logger.error(f"An attempt to select {data['search']} failed.", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()

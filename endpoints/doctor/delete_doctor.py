@@ -1,8 +1,9 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, verify_jwt_in_request
+from flask_jwt_extended import jwt_required
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
+from ..logger import logger
 
 delete_doctor_bp = Blueprint('delete_doctor', __name__)
 
@@ -18,6 +19,7 @@ def delete_doctor():
     errors = schema.validate(data)
 
     if errors:
+        logger.error(f"Invalid delete doctor request made", extra={"method": "DELETE", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -28,9 +30,12 @@ def delete_doctor():
             {'id': data['doctor_id']},
         )
         session.commit()
+        
+        logger.info(f"Deletion of Doctor ID:{data['doctor_id']} done successfully.", extra={"method": "DELETE", "statuscode": 200})
         return jsonify({'success': True}), 200
     except Exception as e:
         session.rollback()
+        logger.error(f"An attempt to delete Doctor ID:{data['doctor_id']} failed.", extra={"method": "DELETE", "statuscode": 500, "exc": str(e)})
         return jsonify({'error': str(e)}), 500
     finally:
         session.close()
