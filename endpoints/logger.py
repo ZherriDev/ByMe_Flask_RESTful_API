@@ -1,5 +1,5 @@
 import logging
-from conn import Session, Log
+from .conn import Session, Log
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
