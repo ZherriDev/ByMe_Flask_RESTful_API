@@ -1,6 +1,1 @@
-/endpoints/templates/confirm_email.html linguist-documentation
-/endpoints/templates/confirm_new_email.html linguist-documentation
-/endpoints/templates/notification_email_change.html linguist-documentation
-/endpoints/templates/notification_pass_change.html linguist-documentation
-/endpoints/templates/reset_pass_form.html linguist-documentation
-/endpoints/templates/reset_pass.html linguist-documentation
+*.py linguist-language=python
