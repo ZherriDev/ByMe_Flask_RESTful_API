@@ -15,7 +15,6 @@ logger.addHandler(file_handler)
 
 file_handler.setLevel(logging.DEBUG)
 
-
 user_db = 'BymeDB_bricklift'
 password_db = 'e40f766b1e3ab2a917d8328d912757f02b0a8d82'
 host_db = '8r0.h.filess.io'
@@ -42,9 +41,6 @@ class Log(Base):
 try:
     engine.connect()
     logger.info('Sucesssfully connection to database')
-except Exception as e:
+except SQLAlchemyError as e:
     logger.critical('Failed to establish database connection. Application shutting down')
     subprocess.Popen("pkill -f 'gunicorn'", shell=True)
-
-
-
