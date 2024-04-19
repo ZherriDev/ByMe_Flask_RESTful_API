@@ -41,9 +41,9 @@ class Log(Base):
 
 try:
     engine.connect()
-    #logger.info('Sucesssfully connection to database')
+    logger.info('Sucesssfully connection to database')
 except Exception as e:
-    #logger.critical('Failed to establish database connection. Application shutting down')
+    logger.critical('Failed to establish database connection. Application shutting down')
     subprocess.Popen("pkill -f 'gunicorn'", shell=True)
 
 
