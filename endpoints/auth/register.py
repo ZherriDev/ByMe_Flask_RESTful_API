@@ -6,6 +6,7 @@ import bcrypt
 import hashlib
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 register_bp = Blueprint('register', __name__)
 
@@ -16,6 +17,7 @@ class RegisterSchema(Schema):
     password = fields.Str(required=True)
 
 @register_bp.route('/register', methods = ['POST'])
+@limiter.limit("10 per minute")
 def register_user():
     data = request.get_json()
     schema = RegisterSchema()

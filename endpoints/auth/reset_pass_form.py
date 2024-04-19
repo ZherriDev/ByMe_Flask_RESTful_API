@@ -5,6 +5,7 @@ from sqlalchemy import text
 import bcrypt
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 reset_pass_form_bp = Blueprint('reset_pass_form', __name__)
 
@@ -14,6 +15,7 @@ class ResetPassFormSchema(Schema):
     key = fields.Str(required=True)
 
 @reset_pass_form_bp.route('/reset_pass_form', methods=['POST'])
+@limiter.limit("5 per minute")
 def reset_pass_form():
     data = request.get_json()
     schema = ResetPassFormSchema()

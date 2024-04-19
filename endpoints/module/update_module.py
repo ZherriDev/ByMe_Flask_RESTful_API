@@ -4,6 +4,7 @@ from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 update_module_bp = Blueprint('update_module', __name__)
 
@@ -14,6 +15,7 @@ class UpdateModuleSchema(Schema):
     status = fields.String(required=True)
 
 @update_module_bp.route('/update_module', methods=['PATCH'])
+@limiter.limit("5 per minute")
 @jwt_required()
 def update_module():
     

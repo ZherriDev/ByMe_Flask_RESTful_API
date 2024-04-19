@@ -3,7 +3,7 @@ from flask_jwt_extended import JWTManager, jwt_required
 from sqlalchemy import text
 from endpoints.conn import Session
 from flask_mailman import Mail
-from endpoints.utils import limiter, set_app
+from endpoints.utils import set_app
 
 from endpoints.admin.shutdown import shutdown_bp
 
@@ -47,6 +47,13 @@ mail = Mail(app)
 app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<JZ6zA'
 
 set_app(app)
+
+@app.errorhandler(429)
+def ratelimit_handler(_):
+    body = {
+        "error": "Too many requests"
+    }
+    return jsonify(body), 429
 
 jwt = JWTManager(app)
 

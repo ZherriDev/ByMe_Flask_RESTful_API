@@ -6,6 +6,7 @@ import bcrypt
 import hashlib
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 request_reset_pass_bp = Blueprint('request_reset_pass', __name__)
 
@@ -13,6 +14,7 @@ class RequestResetPassSchema(Schema):
     email = fields.Str(required=True)
 
 @request_reset_pass_bp.route('/request_reset_pass', methods=['POST'])
+@limiter.limit("10 per minute")
 def request_reset_pass():
     data = request.get_json()
     schema = RequestResetPassSchema()
