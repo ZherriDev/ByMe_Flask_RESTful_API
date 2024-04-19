@@ -4,6 +4,7 @@ from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 update_patient_bp = Blueprint('update_patient', __name__)
 
@@ -22,6 +23,7 @@ class UpdatePatientSchema(Schema):
     
 @update_patient_bp.route('/update_patient', methods=['PATCH'])
 @jwt_required()
+@limiter.limit("5 pe rminute")
 def update_patient():
     
     doctor_id = get_jwt_identity()

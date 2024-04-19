@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 update_patient_doctor_bp = Blueprint('update_patient_doctor', __name__)
 
@@ -14,6 +15,7 @@ class UpdatePatientDoctorSchema(Schema):
 
 @update_patient_doctor_bp.route('/update_patient_doctor', methods=['PATCH'])
 @jwt_required()
+@limiter.limit("5 per minute")
 def update_patient_doctor():
     
     doctor_id = get_jwt_identity()

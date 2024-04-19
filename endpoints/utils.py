@@ -9,7 +9,5 @@ limiter = Limiter(
 )
 
 def set_app(app):
-  limiter.init_app(app)  # Initialize limiter with app when needed
-   
+  limiter.init_app(app)  
 
-# Optional: Other utility functions

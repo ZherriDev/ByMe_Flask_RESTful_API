@@ -6,7 +6,7 @@ from sqlalchemy import text
 import bcrypt
 from ..conn import Session
 from ..logger import logger
-from endpoints.utils import limiter
+from ..utils import limiter
 
 
 login_bp = Blueprint('login', __name__)

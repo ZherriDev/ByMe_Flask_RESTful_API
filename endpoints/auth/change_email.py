@@ -7,7 +7,7 @@ import bcrypt
 import hashlib
 from ..conn import Session
 from ..logger import logger
-from utils import limiter
+from ..utils import limiter
 
 change_email_bp = Blueprint('change_email', __name__)
 
