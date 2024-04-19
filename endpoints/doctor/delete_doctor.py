@@ -25,11 +25,31 @@ def delete_doctor():
     session = Session()
     
     try:
-        session.execute(
-            text("DELETE FROM doctors WHERE doctor_id = :id"),
+        result = session.execute(
+            text("SELECT patient_id FROM patients WHERE doctor_id = :id"),
             {'id': data['doctor_id']},
-        )
-        session.commit()
+        ).fetchall()
+        
+        if result:
+            for patient_id in result:
+                session.execute(
+                    text("DELETE FROM modules WHERE patient_id = :patient_id"),
+                    {'patient_id': patient_id}
+                )
+                session.commit()
+            
+            session.execute(
+                text("DELETE FROM patients WHERE doctor_id = :id"),
+                {'id': data['doctor_id']},
+            )
+            session.commit()
+            
+        else:
+            session.execute(
+                text("DELETE FROM doctors WHERE doctor_id = :id"),
+                {'id': data['doctor_id']},
+            )
+            session.commit()
         
         logger.info(f"Deletion of Doctor ID:{data['doctor_id']} done successfully.", extra={"method": "DELETE", "statuscode": 200})
         return jsonify({'success': True}), 200
