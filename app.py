@@ -48,6 +48,13 @@ app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<J
 
 set_app(app)
 
+@app.errorhandler(429)
+def ratelimit_handler(_):
+    body = {
+        "error": "Too many requests"
+    }
+    return jsonify(body), 429
+
 jwt = JWTManager(app)
 
 @jwt.token_in_blocklist_loader
