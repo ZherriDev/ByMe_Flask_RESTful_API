@@ -3,7 +3,7 @@ from flask_jwt_extended import JWTManager, jwt_required
 from sqlalchemy import text
 from endpoints.conn import Session
 from flask_mailman import Mail
-from endpoints.utils import limiter, set_app
+from endpoints.utils import set_app
 
 from endpoints.admin.shutdown import shutdown_bp
 

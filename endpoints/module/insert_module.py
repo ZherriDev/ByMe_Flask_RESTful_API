@@ -5,6 +5,7 @@ from datetime import datetime
 from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
+from ..utils import limiter
 
 insert_module_bp = Blueprint('insert_module', __name__)
 
@@ -15,6 +16,7 @@ class InsertModuleSchema(Schema):
     status = fields.String(required=True)
 
 @insert_module_bp.route('/insert_module', methods=['POST'])
+@limiter.limit("5 per minute")
 @jwt_required()
 def insert_module():
     
