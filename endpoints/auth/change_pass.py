@@ -6,6 +6,7 @@ from sqlalchemy import text
 import bcrypt
 from ..conn import Session
 from ..logger import logger
+from utils import limiter
 
 change_password_bp = Blueprint('change_password', __name__)
 
@@ -17,6 +18,7 @@ class ChangePasswordSchema(Schema):
 
 @change_password_bp.route('/change_password', methods = ['POST'])
 @jwt_required()
+@limiter.limit("5 per minute")
 def change_password():
     data = request.get_json()
     schema = ChangePasswordSchema()

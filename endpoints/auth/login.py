@@ -6,6 +6,8 @@ from sqlalchemy import text
 import bcrypt
 from ..conn import Session
 from ..logger import logger
+from endpoints.utils import limiter
+
 
 login_bp = Blueprint('login', __name__)
 
@@ -18,6 +20,7 @@ class LoginSchema(Schema):
     location = fields.Str(required=True)
 
 @login_bp.route('/login', methods = ['POST'])
+@limiter.limit("15 per minute")
 def login_user():
     data = request.get_json()
     schema = LoginSchema()

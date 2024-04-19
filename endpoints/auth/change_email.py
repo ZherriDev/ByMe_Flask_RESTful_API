@@ -7,6 +7,7 @@ import bcrypt
 import hashlib
 from ..conn import Session
 from ..logger import logger
+from utils import limiter
 
 change_email_bp = Blueprint('change_email', __name__)
 
@@ -17,6 +18,7 @@ class ChangeEmail(Schema):
 
 @change_email_bp.route('/change_email', methods=['POST'])
 @jwt_required()
+@limiter.limit("5 per minute")
 def change_email():
     data = request.get_json()
     schema = ChangeEmail()
