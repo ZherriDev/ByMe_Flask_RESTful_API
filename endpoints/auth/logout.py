@@ -27,6 +27,7 @@ def logout():
             },
         )
         session.commit()
+        
         logger.info(f"Doctor ID:{doctor_id} logged out.", extra={"method": "DELETE", "statuscode": 200})
         return jsonify({'success': True}), 200
     except Exception as e:

@@ -62,6 +62,7 @@ def login_user():
                         }
                     )
                     session.commit()
+                    
                     logger.info(f"Doctor ID:{result['doctor_id']} logged in.", extra={"method": "POST", "statuscode": 200})
                     return jsonify({'success': True, 'token': token}), 200
                 else:

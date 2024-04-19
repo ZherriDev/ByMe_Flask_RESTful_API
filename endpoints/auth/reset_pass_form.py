@@ -44,6 +44,7 @@ def reset_pass_form():
                 }
             )
             session.commit()
+            
             logger.info(f"Doctor ID:{result['doctor_id']} reset his password", extra={"method": "POST", "statuscode": 200})
             return jsonify({'message': 'Password reset successfully'}), 200
         else:

@@ -29,6 +29,7 @@ def select_doctor_id(id):
             text('SELECT * FROM doctors WHERE doctor_id = :doctor_id'),
             {'doctor_id': data['doctor_id']}
         ).fetchone()
+        
         if result:
             result = result._asdict()
         
