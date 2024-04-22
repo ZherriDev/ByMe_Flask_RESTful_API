@@ -23,7 +23,7 @@ class UpdatePatientSchema(Schema):
     
 @update_patient_bp.route('/update_patient', methods=['PATCH'])
 @jwt_required()
-@limiter.limit("5 pe rminute")
+@limiter.limit("5 per minute")
 def update_patient():
     
     doctor_id = get_jwt_identity()
