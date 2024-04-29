@@ -7,10 +7,8 @@ from endpoints.utils import set_app
 
 from endpoints.admin.shutdown import shutdown_bp
 
-
 from endpoints.appointments.insert_appointments import insert_appointments_bp
 from endpoints.appointments.select_appointments import select_appointments_bp
-
 from endpoints.appointments.delete_appointments import delete_appointments_bp
 
 from endpoints.auth.register import register_bp
