@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, BigInteger, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, BigInteger, DateTime, Text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
@@ -33,7 +33,7 @@ class Log(Base):
     level = Column(String, nullable=True)
     date_time = Column(DateTime, nullable=True)
     msg = Column(String, nullable=True)
-    exception = Column(String, nullable=True)
+    exception = Column(Text, nullable=True)
     path = Column(String, nullable=True)
     method = Column(String, nullable=True)
     status_code = Column(Integer, nullable=True)

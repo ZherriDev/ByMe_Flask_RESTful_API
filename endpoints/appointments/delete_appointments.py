@@ -11,7 +11,7 @@ class DeleteAppointmentsSchema(Schema):
     appointment_id = fields.Int(required=True)
     
 @delete_appointments_bp.route('/delete_appointment', methods=['DELETE'])
-@jwt_required
+@jwt_required()
 def delete_appointment():
     
     doctor_id = get_jwt_identity()
@@ -28,7 +28,7 @@ def delete_appointment():
     
     try:
         appointment_id = data['appointment_id']
-        Session.execute(text('DELETE FROM appointments WHERE appointment_id = :appointment_id'),
+        session.execute(text('DELETE FROM appointments WHERE appointment_id = :appointment_id'),
             {
                 'appointment_id': appointment_id,
             },
