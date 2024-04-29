@@ -1,4 +1,4 @@
-import logging
+import logging, time
 from .conn import Session, Log
 
 logger = logging.getLogger(__name__)
@@ -8,7 +8,7 @@ class DBHandler(logging.Handler):
     def emit(self, record):
         with Session() as session:
             levelname = record.levelname
-            datetime = record.asctime
+            datetime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
             msg = record.getMessage()
             exc = getattr(record, 'exc', None)
             endpoint = record.pathname
