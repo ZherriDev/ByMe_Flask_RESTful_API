@@ -7,9 +7,9 @@ from endpoints.utils import set_app
 
 from endpoints.admin.shutdown import shutdown_bp
 
+from endpoints.appointments.delete_appointments import delete_appointments_bp
 from endpoints.appointments.insert_appointments import insert_appointments_bp
 from endpoints.appointments.select_appointments import select_appointments_bp
-from endpoints.appointments.delete_appointments import delete_appointments_bp
 
 from endpoints.auth.register import register_bp
 from endpoints.auth.login import login_bp
@@ -78,6 +78,10 @@ def check_if_token_in_blacklist(jwt_header, jwt_data):
         return False
 
 app.register_blueprint(shutdown_bp, url_prefix='/admin')
+
+app.register_blueprint(delete_appointments_bp, url_prefix='/appointments')
+app.register_blueprint(insert_appointments_bp, url_prefix='/appointments')
+app.register_blueprint(select_appointments_bp, url_prefix='/appointments')
 
 app.register_blueprint(register_bp, url_prefix='/auth')
 app.register_blueprint(login_bp, url_prefix='/auth')
