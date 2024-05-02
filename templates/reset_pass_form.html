@@ -255,7 +255,7 @@
             width="20px"
             />`;
 
-            fetch("http://localhost:5000/auth/reset_pass_form", {
+            fetch("https://api-py-byme.onrender.com/auth/reset_pass_form", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(formData),
