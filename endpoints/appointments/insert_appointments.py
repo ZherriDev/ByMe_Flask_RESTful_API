@@ -38,7 +38,7 @@ def insert_appointments():
         )
         session.commit()
         
-        appointment_id = session.execute("SELECT last_insert_rowid()").scalar()
+        appointment_id = session.execute(text("SELECT LAST_INSERT_ID()")).scalar()
     
         logger.info(f"Doctor ID:{data['doctor_id']} added a Appointment ID:{appointment_id} with Patient ID:{data['patient_id']}.", extra={"method": "POST", "statuscode": 201})
         return jsonify({'success': True}), 201

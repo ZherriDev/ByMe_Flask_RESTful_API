@@ -64,7 +64,7 @@ def insert_patient():
         )
         session.commit()
         
-        patient_id = session.execute("SELECT last_insert_rowid()").scalar()
+        patient_id = session.execute(text("SELECT LAST_INSERT_ID()")).scalar()
         
         logger.info(f"Doctor ID:{doctor_id} created a new Patient ID:{patient_id}.", extra={"method": "POST", "statuscode": 201})
         return jsonify({'success': True}), 201

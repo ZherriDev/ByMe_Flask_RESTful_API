@@ -36,7 +36,7 @@ def register_user():
         name = data['name']
         email_key = hashlib.md5(data['email'].encode('utf8')).hexdigest()
         
-        session.execute(
+        result = session.execute(
             text("INSERT INTO doctors (fullname, speciality, email, password, key_email) VALUES (:fullname, :speciality, :email, :senha, :key)"),
             {
                 'fullname': name,
@@ -48,7 +48,7 @@ def register_user():
         )
         session.commit()
         
-        doctor_id = session.execute(text("SELECT last_insert_rowid()")).scalar()
+        doctor_id = session.execute(text("SELECT LAST_INSERT_ID()")).scalar()
         
         subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', data['email']
         text_content = f'Hi {name},\nYour registration is almost complete on our application, we just need you to confirm your email.\n\
