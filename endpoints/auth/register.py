@@ -36,7 +36,7 @@ def register_user():
         name = data['name']
         email_key = hashlib.md5(data['email'].encode('utf8')).hexdigest()
         
-        result = session.execute(
+        session.execute(
             text("INSERT INTO doctors (fullname, speciality, email, password, key_email) VALUES (:fullname, :speciality, :email, :senha, :key)"),
             {
                 'fullname': name,

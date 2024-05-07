@@ -70,7 +70,7 @@ def login_user():
                 session.commit()
                 
                 logger.info(f"Doctor ID:{result['doctor_id']} logged in.", extra={"method": "POST", "statuscode": 200})
-                return jsonify({'success': True, 'token': token}), 200
+                return jsonify({'success': True, 'token': token, 'doctor_id': result['doctor_id']}), 200
             else:
                 logger.warning(f"Doctor ID:{result['doctor_id']}'s login attempt was denied. Email not confirmed.", extra={"method": "POST", "statuscode": 403})
                 return jsonify({'error': 'Email is not yet verified'}), 403
