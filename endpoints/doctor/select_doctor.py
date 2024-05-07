@@ -14,7 +14,7 @@ class SelectDoctorSchema(Schema):
 @jwt_required()
 def select_doctor(search):
     
-    data = jsonify({'search': search})
+    data = {'search': search}
     schema = SelectDoctorSchema()
     errors = schema.validate(data)
 

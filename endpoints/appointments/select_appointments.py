@@ -13,7 +13,7 @@ class SelectAppointmentSchema(Schema):
 select_appointments_bp.route("/select_appointments/<date>", methods=['GET'])
 @jwt_required()
 def select_appointments(date):
-    data = jsonify({'date': date})
+    data = {'date': date}
     schema = SelectAppointmentSchema()
     errors = schema.validate(data)
 

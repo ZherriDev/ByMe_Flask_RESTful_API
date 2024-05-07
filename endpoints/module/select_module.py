@@ -17,7 +17,7 @@ def select_modules(id):
 
     doctor_id = get_jwt_identity()
     
-    data = jsonify({'patient_id': id})
+    data = {'patient_id': id}
     schema = ShowModuleSchema()
     errors = schema.validate(data)
 

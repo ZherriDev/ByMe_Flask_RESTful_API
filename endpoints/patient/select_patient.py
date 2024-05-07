@@ -25,7 +25,7 @@ def select_patient(id):
     if request.args.get('state'):
         state = request.args.get('state')
 
-    data = jsonify({'doctor_id': id, 'order': order, 'state': state})
+    data = {'doctor_id': id, 'order': order, 'state': state}
     schema = SelectPatientSchema()
     errors = schema.validate(data)
 
