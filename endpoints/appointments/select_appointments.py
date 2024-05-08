@@ -44,7 +44,6 @@ def select_appointments(query, date):
             hours, remainder = divmod(appointment['time'].seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
             appointment['time'] = '{:02}:{:02}:{:02}'.format(hours, minutes, seconds)
-            print(appointment)
             appointments.append(appointment)
             
         print(appointments)
