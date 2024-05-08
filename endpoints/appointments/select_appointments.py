@@ -2,6 +2,7 @@ from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
+from datetime import datetime
 from ..conn import Session
 from ..logger import logger
 
@@ -39,7 +40,14 @@ def select_appointments(query, date):
         
         for appointment in result:
             appointment = appointment._asdict()
+            appointment['date'] = appointment['date'].strftime('%Y-%m-%d')
+            hours, remainder = divmod(appointment['time'].seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            appointment['time'] = '{:02}:{:02}:{:02}'.format(hours, minutes, seconds)
+            print(appointment)
             appointments.append(appointment)
+            
+        print(appointments)
         
         logger.info(f"Selection of {data['date']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'appointments': appointments}), 200
