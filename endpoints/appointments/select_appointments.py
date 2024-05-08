@@ -8,11 +8,11 @@ from ..logger import logger
 select_appointments_bp = Blueprint('select_appointments', __name__)
 
 class SelectAppointmentSchema(Schema):
-    date = fields.DateTime(required=True)
+    date = fields.Date(required=True)
 
-select_appointments_bp.route("/select_appointments/<date>", methods=['GET'])
+select_appointments_bp.route("/select_appointments/<query>/<date>", methods=['GET'])
 @jwt_required()
-def select_appointments(date):
+def select_appointments(query, date):
     data = {'date': date}
     schema = SelectAppointmentSchema()
     errors = schema.validate(data)
@@ -25,11 +25,17 @@ def select_appointments(date):
     
     try:
         appointments = []
-        
-        result = session.execute(
-            text('SELECT * FROM appointments WHERE date_time = :date'),
-            {'date': date}
-        ).fetchall()
+
+        if query == 'one':
+            result = session.execute(
+                text('SELECT * FROM appointments WHERE date = :date'),
+                {'date': date}
+            ).fetchall()
+        elif query == 'all':
+            result = session.execute(
+                text('SELECT * FROM appointments WHERE date >= :date'),
+                {'date': date}
+            ).fetchall()
         
         for appointment in result:
             appointment = appointment._asdict()
