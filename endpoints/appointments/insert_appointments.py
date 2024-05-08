@@ -13,7 +13,7 @@ class InsertAppointmentSchema(Schema):
     doctor_id = fields.Int(required=True)
     patient_id = fields.Int(required=True)
 
-insert_appointments_bp.route('/insert_appointments', methods=['POST'])
+@insert_appointments_bp.route('/insert_appointments', methods=['POST'])
 @limiter.limit("5 per minute")
 @jwt_required()
 def insert_appointments():
