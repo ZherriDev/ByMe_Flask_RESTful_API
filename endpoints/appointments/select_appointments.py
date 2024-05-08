@@ -45,8 +45,6 @@ def select_appointments(query, date):
             minutes, seconds = divmod(remainder, 60)
             appointment['time'] = '{:02}:{:02}:{:02}'.format(hours, minutes, seconds)
             appointments.append(appointment)
-            
-        print(appointments)
         
         logger.info(f"Selection of {data['date']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'appointments': appointments}), 200
