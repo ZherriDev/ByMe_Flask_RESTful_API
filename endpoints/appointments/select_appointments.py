@@ -10,7 +10,7 @@ select_appointments_bp = Blueprint('select_appointments', __name__)
 class SelectAppointmentSchema(Schema):
     date = fields.Str(required=True)
 
-select_appointments_bp.route("/select_appointments/<query>/<date>", methods=['GET'])
+@select_appointments_bp.route("/select_appointments/<query>/<date>", methods=['GET'])
 @jwt_required()
 def select_appointments(query, date):
     data = {'date': date}
