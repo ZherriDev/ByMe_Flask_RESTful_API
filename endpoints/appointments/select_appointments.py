@@ -44,6 +44,14 @@ def select_appointments(query, date):
             hours, remainder = divmod(appointment['time'].seconds, 3600)
             minutes, seconds = divmod(remainder, 60)
             appointment['time'] = '{:02}:{:02}:{:02}'.format(hours, minutes, seconds)
+            result2 = session.execute(
+                text('SELECT name, processnumber FROM patients WHERE patient_id = :patient_id'),
+                {'patient_id': appointment['patient_id']}
+            ).fetchone()
+            appointment['patient_data'] = {
+                'name': result[0],
+                'processnumber': result[1]
+            }
             appointments.append(appointment)
         
         logger.info(f"Selection of {data['date']} done successfully.", extra={"method": "GET", "statuscode": 200})
