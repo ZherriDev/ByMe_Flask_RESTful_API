@@ -29,12 +29,12 @@ def select_appointments(query, date):
 
         if query == 'one':
             result = session.execute(
-                text('SELECT * FROM appointments WHERE date = :date'),
+                text('SELECT * FROM appointments WHERE date = :date ORDER BY time ASC'),
                 {'date': date}
             ).fetchall()
         elif query == 'all':
             result = session.execute(
-                text('SELECT * FROM appointments WHERE date >= :date'),
+                text('SELECT * FROM appointments WHERE date >= :date ORDER BY date ASC'),
                 {'date': date}
             ).fetchall()
         
