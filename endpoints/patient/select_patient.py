@@ -12,18 +12,10 @@ class SelectPatientSchema(Schema):
     order = fields.Str(required=False)
     state = fields.Str(required=False)
 
+@select_patient_bp.route('/select_patient/<int:id>/', defaults={'order': None, 'state': None})
 @select_patient_bp.route('/select_patient/<int:id>/<order>/<state>', methods=['GET'])
 @jwt_required()
-def select_patient(id):
-
-    order = None
-    state = None
-    
-    if request.args.get('order'):
-        order = request.args.get('order')
-    
-    if request.args.get('state'):
-        state = request.args.get('state')
+def select_patient(id, order, state):
 
     data = {'doctor_id': id, 'order': order, 'state': state}
     schema = SelectPatientSchema()
