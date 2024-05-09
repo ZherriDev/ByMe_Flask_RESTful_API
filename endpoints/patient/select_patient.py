@@ -9,8 +9,8 @@ select_patient_bp = Blueprint('select_patient', __name__)
 
 class SelectPatientSchema(Schema):
     doctor_id = fields.Int(required=True)
-    order = fields.Str(required=False)
-    state = fields.Str(required=False)
+    order = fields.Str(allow_none=True)
+    state = fields.Str(allow_none=True)
 
 @select_patient_bp.route('/select_patient/<int:id>/', defaults={'order': None, 'state': None})
 @select_patient_bp.route('/select_patient/<int:id>/<order>/<state>', methods=['GET'])
