@@ -49,8 +49,8 @@ def select_appointments(query, date):
                 {'patient_id': appointment['patient_id']}
             ).fetchone()
             appointment['patient_data'] = {
-                'name': result[0],
-                'processnumber': result[1]
+                'name': result2[0],
+                'processnumber': result2[1]
             }
             appointments.append(appointment)
         
