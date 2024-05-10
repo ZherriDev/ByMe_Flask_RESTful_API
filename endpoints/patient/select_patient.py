@@ -54,7 +54,7 @@ def select_patient(id, search, order, state):
                 text(sql.format(text_state, text_order)),
                 {
                     'doctor_id': data['doctor_id'],
-                    'search': data['search']
+                    'search': "%" + data['search'] + "%"
                 }
             ).fetchall()
         else:
