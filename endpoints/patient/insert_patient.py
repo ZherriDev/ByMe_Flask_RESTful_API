@@ -15,7 +15,7 @@ class InsertPatientSchema(Schema):
     telephone = fields.Int(required=True)
     email = fields.Str(required=True)
     sex = fields.Str(required=True)
-    birthdate = fields.Date(required=True)
+    birthdate = fields.Str(required=True)
     processnumber = fields.Str(required=True)
     address = fields.Str(required=True)
     postalcode = fields.Str(required=True)
