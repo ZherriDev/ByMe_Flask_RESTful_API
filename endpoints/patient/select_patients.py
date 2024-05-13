@@ -12,12 +12,13 @@ class SelectPatientsSchema(Schema):
     order = fields.Str(allow_none=True)
     state = fields.Str(allow_none=True)
 
-@select_patients_bp.route('/select_patients/<int:id>/', defaults={'order': None, 'state': None})
-@select_patients_bp.route('/select_patients/<int:id>/<order>/<state>', methods=['GET'])
+@select_patient_bp.route('/select_patients/<int:id>/', methods=['GET'], defaults={'search': None, 'order': None, 'state': None})
+@select_patient_bp.route('/select_patients/<int:id>/<order>/<state>', methods=['GET'], defaults={'search': None})
+@select_patient_bp.route('/select_patients/<int:id>/<search>/<order>/<state>', methods=['GET'])
 @jwt_required()
-def select_patients(id, order, state):
+def select_patients(id, search, order, state):
 
-    data = {'doctor_id': id, 'order': order, 'state': state}
+    data = {'doctor_id': id, 'search': search, 'order': order, 'state': state}
     schema = SelectPatientsSchema()
     errors = schema.validate(data)
 
@@ -46,12 +47,22 @@ def select_patients(id, order, state):
                 text_state = " AND status = 'Completed Treatment'"
 
         patients = []
-        sql = "SELECT * FROM patients WHERE doctor_id = :doctor_id{}{}"
         
-        result = session.execute(
-            text(sql.format(text_state, text_order)),
-            {'doctor_id': data['doctor_id']}
-        ).fetchall()
+        if search:
+            sql = "SELECT * FROM patients WHERE doctor_id = :doctor_id AND name LIKE :search{}{}"
+            result = session.execute(
+                text(sql.format(text_state, text_order)),
+                {
+                    'doctor_id': data['doctor_id'],
+                    'search': data['search']
+                }
+            ).fetchall()
+        else:
+            sql = "SELECT * FROM patients WHERE doctor_id = :doctor_id{}{}"
+            result = session.execute(
+                text(sql.format(text_state, text_order)),
+                {'doctor_id': data['doctor_id']}
+            ).fetchall()
         
         for patient in result:
             patient = patient._asdict()
