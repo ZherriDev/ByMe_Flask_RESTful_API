@@ -5,24 +5,24 @@ from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
 
-select_patient_bp = Blueprint('select_patient', __name__)
+select_patients_bp = Blueprint('select_patients', __name__)
 
-class SelectPatientSchema(Schema):
+class SelectPatientsSchema(Schema):
     doctor_id = fields.Int(required=True)
     order = fields.Str(allow_none=True)
     state = fields.Str(allow_none=True)
 
-@select_patient_bp.route('/select_patient/<int:id>/', defaults={'order': None, 'state': None})
-@select_patient_bp.route('/select_patient/<int:id>/<order>/<state>', methods=['GET'])
+@select_patients_bp.route('/select_patients/<int:id>/', defaults={'order': None, 'state': None})
+@select_patients_bp.route('/select_patients/<int:id>/<order>/<state>', methods=['GET'])
 @jwt_required()
-def select_patient(id, order, state):
+def select_patients(id, order, state):
 
     data = {'doctor_id': id, 'order': order, 'state': state}
-    schema = SelectPatientSchema()
+    schema = SelectPatientsSchema()
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid patient select request made by Doctor ID:{data['doctor_id']}.", extra={"method": "GET", "statuscode": 400})
+        logger.error(f"Invalid patients select request made by Doctor ID:{data['doctor_id']}.", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
         
     session = Session()
