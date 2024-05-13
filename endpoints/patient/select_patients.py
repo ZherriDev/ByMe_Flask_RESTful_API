@@ -55,6 +55,8 @@ def select_patients(id, order, state):
         
         for patient in result:
             patient = patient._asdict()
+            patient['birthdate'] = patient['birthdate'].strftime('%Y-%m-%d')
+            patient['admission_date'] = patient['admission_date'].strftime('%Y-%m-%d')
             patients.append(patient)
         
         logger.info(f"Doctor ID:{data['doctor_id']} selected Patients.", extra={"method": "GET", "statuscode": 200})

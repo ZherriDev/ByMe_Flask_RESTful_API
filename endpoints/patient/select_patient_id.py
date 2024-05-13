@@ -34,6 +34,8 @@ def select_patient(id):
         
         if result:
             result = result._asdict()
+            result['birthdate'] = result['birthdate'].strftime('%Y-%m-%d')
+            result['admission_date'] = result['admission_date'].strftime('%Y-%m-%d')
         
         logger.info(f"Selection of Patient ID:{data['patient_id']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'patient': result}), 200
