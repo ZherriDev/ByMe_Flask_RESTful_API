@@ -9,6 +9,7 @@ select_patients_bp = Blueprint('select_patients', __name__)
 
 class SelectPatientsSchema(Schema):
     doctor_id = fields.Int(required=True)
+    search = fields.Str(allow_none=True)
     order = fields.Str(allow_none=True)
     state = fields.Str(allow_none=True)
 
