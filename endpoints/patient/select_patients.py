@@ -12,9 +12,9 @@ class SelectPatientsSchema(Schema):
     order = fields.Str(allow_none=True)
     state = fields.Str(allow_none=True)
 
-@select_patient_bp.route('/select_patients/<int:id>/', methods=['GET'], defaults={'search': None, 'order': None, 'state': None})
-@select_patient_bp.route('/select_patients/<int:id>/<order>/<state>', methods=['GET'], defaults={'search': None})
-@select_patient_bp.route('/select_patients/<int:id>/<search>/<order>/<state>', methods=['GET'])
+@select_patients_bp.route('/select_patients/<int:id>/', methods=['GET'], defaults={'search': None, 'order': None, 'state': None})
+@select_patients_bp.route('/select_patients/<int:id>/<order>/<state>', methods=['GET'], defaults={'search': None})
+@select_patients_bp.route('/select_patients/<int:id>/<search>/<order>/<state>', methods=['GET'])
 @jwt_required()
 def select_patients(id, search, order, state):
 
