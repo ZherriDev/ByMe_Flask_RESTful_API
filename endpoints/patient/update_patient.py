@@ -14,7 +14,8 @@ class UpdatePatientSchema(Schema):
     telephone = fields.Int(required=True)
     email = fields.Str(required=True)
     sex = fields.Str(required=True)
-    birthdate = fields.Date(required=True)
+    birthdate = fields.Str(required=True)
+    processnumber = fields.Str(required=True)
     address = fields.Str(required=True)
     postalcode = fields.Str(required=True)
     town = fields.Str(required=True)
@@ -43,7 +44,7 @@ def update_patient():
     try:
         session.execute(
             text('UPDATE patients SET name = :name, telephone = :telephone, email = :email, \
-                sex = :sex, birthdate = :birthdate, address = :address, \
+                sex = :sex, birthdate = :birthdate, processnumber = :processnumber, address = :address, \
                 postalcode = :postalcode, town = :town, nif = :nif, sns = :sns WHERE patient_id = :patient_id'),
             {
                 'name': data['name'], 
@@ -51,6 +52,7 @@ def update_patient():
                 'email': data['email'],
                 'sex': data['sex'], 
                 'birthdate': data['birthdate'], 
+                'processnumber': data['processnumber'], 
                 'address': data['address'],
                 'postalcode': data['postalcode'], 
                 'town': data['town'], 
