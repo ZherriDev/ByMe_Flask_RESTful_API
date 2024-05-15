@@ -31,7 +31,7 @@ def select_modules(id):
     try:
         modules = []
         result = session.execute(
-            text('SELECT * FROM modules WHERE patient_id = :patient_id'),
+            text('SELECT * FROM modules WHERE patient_id = :patient_id ORDER BY creation_date DESC'),
             {'patient_id': patient_id}
         ).fetchall()
         
