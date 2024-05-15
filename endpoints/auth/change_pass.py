@@ -39,7 +39,7 @@ def change_password():
         ).fetchone()
         
         result = result_old_pass._asdict()
-        name = result_old_pass['fullname']
+        name = result['fullname']
 
         if bcrypt.checkpw(data['old_password'].encode('utf8'), result['password'].encode('utf8')):
             salt = bcrypt.gensalt()
