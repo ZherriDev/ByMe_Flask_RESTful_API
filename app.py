@@ -40,6 +40,7 @@ from endpoints.patient.select_patients import select_patients_bp
 from endpoints.patient.update_patient_doctor import update_patient_doctor_bp
 
 from endpoints.sessions.select_sessions import select_sessions_bp
+from endpoints.sessions.update_session import update_session_bp
 
 app = Flask(__name__)
 
@@ -115,6 +116,7 @@ app.register_blueprint(delete_patient_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 
 app.register_blueprint(select_sessions_bp, url_prefix='/sessions')
+app.register_blueprint(update_session_bp, url_prefix='/sessions')
 
 @app.route('/', methods=['GET'])
 def index():

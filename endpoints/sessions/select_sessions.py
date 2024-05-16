@@ -35,9 +35,10 @@ def select_sessions(id):
             {'doctor_id': doctor_id}
         ).fetchall()
         
-        for session in result:
-            session = session._asdict()
-            sessions.append(session)
+        for sessionUser in result:
+            sessionUser = sessionUser._asdict()
+            sessionUser['date_time'] = sessionUser['date_time'].strftime('%Y-%m-%d, %H:%M:%S')
+            sessions.append(sessionUser)
         
         logger.info(f"Doctor ID:{doctor_id} selected Sessions", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'sessions': sessions}), 200
