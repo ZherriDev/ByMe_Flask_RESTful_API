@@ -38,6 +38,8 @@ from endpoints.patient.delete_patient import delete_patient_bp
 from endpoints.patient.select_patient import select_patient_bp
 from endpoints.patient.update_patient_doctor import update_patient_doctor_bp
 
+from endpoints.sessions.select_sessions import select_sessions_bp
+
 app = Flask(__name__)
 
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
@@ -109,6 +111,8 @@ app.register_blueprint(select_patient_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_bp, url_prefix='/patient')
 app.register_blueprint(delete_patient_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
+
+app.register_blueprint(select_sessions_bp, url_prefix='/sessions')
 
 @app.route('/', methods=['GET'])
 def index():
