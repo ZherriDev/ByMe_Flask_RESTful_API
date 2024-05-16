@@ -73,8 +73,8 @@ def change_password():
             logger.info(f"Doctor ID:{doctor_id} changed his password.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'success': True}), 200    
         else:
-            logger.warning(f"Doctor ID:{doctor_id} tried to change his password but the old_password was invalid.", extra={"method": "POST", "statuscode": 200})
-            return jsonify({'message': 'Invalid old password'}), 400
+            logger.warning(f"Doctor ID:{doctor_id} tried to change his password but the old_password was invalid.", extra={"method": "POST", "statuscode": 401})
+            return jsonify({'message': 'Invalid old password'}), 401
         
     except Exception as e:
         session.rollback()
