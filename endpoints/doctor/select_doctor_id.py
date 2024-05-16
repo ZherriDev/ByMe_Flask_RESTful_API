@@ -14,7 +14,7 @@ class SelectDoctorIDSchema(Schema):
 @jwt_required()
 def select_doctor_id(id):
     
-    data = jsonify({'doctor_id': id})
+    data = {'doctor_id': id}
     schema = SelectDoctorIDSchema()
     errors = schema.validate(data)
 
@@ -32,6 +32,7 @@ def select_doctor_id(id):
         
         if result:
             result = result._asdict()
+            result['birthdate'] = result['birthdate'].strftime('%Y-%m-%d')
         
         logger.info(f"Selection of Doctor ID:{data['doctor_id']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'doctor': result}), 200

@@ -45,7 +45,7 @@ def insert_module():
         )
         session.commit()
         
-        module_id = session.execute("SELECT last_insert_rowid()").scalar()
+        module_id = session.execute(text("SELECT LAST_INSERT_ID()")).scalar()
         
         logger.info(f"Doctor ID:{doctor_id} added a Module ID:{module_id} to Patient ID:{data['patient_id']}.", extra={"method": "POST", "statuscode": 201})
         return jsonify({'success': True}), 201

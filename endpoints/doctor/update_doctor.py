@@ -14,7 +14,7 @@ class UpdateDoctorSchema(Schema):
     photo = fields.Str(required=True)
     telephone = fields.Int(required=True)
     sex = fields.Str(required=True)
-    birthdate = fields.Date(required=True)
+    birthdate = fields.String(required=True)
     address = fields.Str(required=True)
     speciality = fields.Str(required=True)
 

@@ -48,7 +48,7 @@ def register_user():
         )
         session.commit()
         
-        doctor_id = session.execute("SELECT last_insert_rowid()").scalar()
+        doctor_id = session.execute(text("SELECT LAST_INSERT_ID()")).scalar()
         
         subject, from_email, to = 'ByMe Information Technology - Email Confirmation', 'cinesquadd@gmail.com', data['email']
         text_content = f'Hi {name},\nYour registration is almost complete on our application, we just need you to confirm your email.\n\

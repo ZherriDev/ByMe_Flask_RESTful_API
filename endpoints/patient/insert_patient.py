@@ -15,7 +15,7 @@ class InsertPatientSchema(Schema):
     telephone = fields.Int(required=True)
     email = fields.Str(required=True)
     sex = fields.Str(required=True)
-    birthdate = fields.Date(required=True)
+    birthdate = fields.Str(required=True)
     processnumber = fields.Str(required=True)
     address = fields.Str(required=True)
     postalcode = fields.Str(required=True)
@@ -64,7 +64,7 @@ def insert_patient():
         )
         session.commit()
         
-        patient_id = session.execute("SELECT last_insert_rowid()").scalar()
+        patient_id = session.execute(text("SELECT LAST_INSERT_ID()")).scalar()
         
         logger.info(f"Doctor ID:{doctor_id} created a new Patient ID:{patient_id}.", extra={"method": "POST", "statuscode": 201})
         return jsonify({'success': True}), 201

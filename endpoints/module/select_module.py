@@ -17,7 +17,7 @@ def select_modules(id):
 
     doctor_id = get_jwt_identity()
     
-    data = jsonify({'patient_id': id})
+    data = {'patient_id': id}
     schema = ShowModuleSchema()
     errors = schema.validate(data)
 
@@ -31,7 +31,7 @@ def select_modules(id):
     try:
         modules = []
         result = session.execute(
-            text('SELECT * FROM modules WHERE patient_id = :patient_id'),
+            text('SELECT * FROM modules WHERE patient_id = :patient_id ORDER BY creation_date DESC'),
             {'patient_id': patient_id}
         ).fetchall()
         

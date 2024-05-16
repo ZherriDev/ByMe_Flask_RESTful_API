@@ -2,18 +2,19 @@ from flask import jsonify, request, Blueprint
 from flask_jwt_extended import jwt_required, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
+from datetime import datetime
 from ..conn import Session
 from ..logger import logger
 
 select_appointments_bp = Blueprint('select_appointments', __name__)
 
 class SelectAppointmentSchema(Schema):
-    date = fields.DateTime(required=True)
+    date = fields.Str(required=True)
 
-select_appointments_bp.route("/select_appointments/<date>", methods=['GET'])
+@select_appointments_bp.route("/select_appointments/<query>/<date>", methods=['GET'])
 @jwt_required()
-def select_appointments(date):
-    data = jsonify({'date': date})
+def select_appointments(query, date):
+    data = {'date': date}
     schema = SelectAppointmentSchema()
     errors = schema.validate(data)
 
@@ -25,14 +26,32 @@ def select_appointments(date):
     
     try:
         appointments = []
-        
-        result = session.execute(
-            text('SELECT * FROM appointments WHERE date_time = :date'),
-            {'date': date}
-        ).fetchall()
+
+        if query == 'one':
+            result = session.execute(
+                text('SELECT * FROM appointments WHERE date = :date ORDER BY time ASC'),
+                {'date': date}
+            ).fetchall()
+        elif query == 'all':
+            result = session.execute(
+                text('SELECT * FROM appointments WHERE date >= :date ORDER BY date ASC'),
+                {'date': date}
+            ).fetchall()
         
         for appointment in result:
             appointment = appointment._asdict()
+            appointment['date'] = appointment['date'].strftime('%Y-%m-%d')
+            hours, remainder = divmod(appointment['time'].seconds, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            appointment['time'] = '{:02}:{:02}:{:02}'.format(hours, minutes, seconds)
+            result2 = session.execute(
+                text('SELECT name, processnumber FROM patients WHERE patient_id = :patient_id'),
+                {'patient_id': appointment['patient_id']}
+            ).fetchone()
+            appointment['patient_data'] = {
+                'name': result2[0],
+                'processnumber': result2[1]
+            }
             appointments.append(appointment)
         
         logger.info(f"Selection of {data['date']} done successfully.", extra={"method": "GET", "statuscode": 200})
