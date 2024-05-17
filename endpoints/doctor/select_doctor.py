@@ -5,21 +5,22 @@ from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
 
-select_doctor_bp = Blueprint('select_doctor', __name__)
+select_doctors_bp = Blueprint('select_doctors', __name__)
 
-class SelectDoctorSchema(Schema):
+class SelectDoctorsSchema(Schema):
     search = fields.Str(required=True)
 
-@select_doctor_bp.route('/select_doctor/<search>', methods=['GET'])
+@select_doctors_bp.route('/select_doctors', methods=['GET'], defaults={'search': None})
+@select_doctors_bp.route('/select_doctors/<search>', methods=['GET'])
 @jwt_required()
-def select_doctor(search):
+def select_doctors(search):
     
     data = {'search': search}
-    schema = SelectDoctorSchema()
+    schema = SelectDoctorsSchema()
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid select doctor request made", extra={"method": "GET", "statuscode": 400})
+        logger.error(f"Invalid select doctors request made", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
