@@ -8,7 +8,7 @@ from ..logger import logger
 select_doctors_bp = Blueprint('select_doctors', __name__)
 
 class SelectDoctorsSchema(Schema):
-    search = fields.Str(required=True)
+    search = fields.Str(allow_none=True)
 
 @select_doctors_bp.route('/select_doctors', methods=['GET'], defaults={'search': None})
 @select_doctors_bp.route('/select_doctors/<search>', methods=['GET'])
