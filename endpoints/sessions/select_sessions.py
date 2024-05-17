@@ -1,5 +1,5 @@
 from flask import jsonify, request, Blueprint
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, verify_jwt_in_request
 from marshmallow import Schema, fields
 from sqlalchemy import text
 from ..conn import Session
@@ -20,6 +20,9 @@ def select_sessions(id):
     data = {'doctor_id': id}
     schema = GetSessionsSchema()
     errors = schema.validate(data)
+    
+    jwt_data = verify_jwt_in_request()
+    jti = jwt_data[1]['jti'];
 
     if errors:
         logger.error(f"Invalid sessions select request made by Doctor ID:{doctor_id}.", extra={"method": "GET", "statuscode": 400})
@@ -34,13 +37,21 @@ def select_sessions(id):
             text('SELECT * FROM sessions WHERE doctor_id = :doctor_id'),
             {'doctor_id': doctor_id}
         ).fetchall()
+
+        result_id = session.execute(text('SELECT session_id FROM sessions WHERE jti = :jti'),
+            {
+                "jti": jti
+            }).fetchone()
+        
+        if result_id:
+            session_id = result_id[0]
         
         for sessionUser in result:
             sessionUser = sessionUser._asdict()
             sessions.append(sessionUser)
         
         logger.info(f"Doctor ID:{doctor_id} selected Sessions", extra={"method": "GET", "statuscode": 200})
-        return jsonify({'success': True, 'sessions': sessions}), 200
+        return jsonify({'success': True, 'sessions': sessions, 'current_session': session_id}), 200
     except Exception as e:
         session.rollback()
         logger.error(f"Doctor ID:{doctor_id}'s attempt to select Sessions failed.", extra={"method": "GET", "statuscode": 500, "exc": str(e)})
