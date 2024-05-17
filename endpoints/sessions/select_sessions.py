@@ -37,7 +37,6 @@ def select_sessions(id):
         
         for sessionUser in result:
             sessionUser = sessionUser._asdict()
-            sessionUser['date_time'] = sessionUser['date_time'].strftime('%Y-%m-%d, %H:%M:%S')
             sessions.append(sessionUser)
         
         logger.info(f"Doctor ID:{doctor_id} selected Sessions", extra={"method": "GET", "statuscode": 200})
