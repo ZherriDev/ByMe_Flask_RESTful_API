@@ -21,7 +21,7 @@ from endpoints.auth.reset_pass import reset_pass_bp
 from endpoints.auth.reset_pass_form import reset_pass_form_bp
 from endpoints.auth.change_pass import change_password_bp
 
-from endpoints.doctor.select_doctor import select_doctor_bp
+from endpoints.doctor.select_doctors import select_doctors_bp
 from endpoints.doctor.select_doctor_id import select_doctor_id_bp
 from endpoints.doctor.delete_doctor import delete_doctor_bp
 from endpoints.doctor.update_doctor import update_doctor_bp
@@ -97,7 +97,7 @@ app.register_blueprint(reset_pass_bp, url_prefix='/auth')
 app.register_blueprint(reset_pass_form_bp, url_prefix='/auth')
 app.register_blueprint(change_password_bp, url_prefix='/auth')
 
-app.register_blueprint(select_doctor_bp, url_prefix='/doctor')
+app.register_blueprint(select_doctors_bp, url_prefix='/doctor')
 app.register_blueprint(select_doctor_id_bp, url_prefix='/doctor')
 app.register_blueprint(delete_doctor_bp, url_prefix='/doctor')
 app.register_blueprint(update_doctor_bp, url_prefix='/doctor')
