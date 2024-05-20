@@ -21,7 +21,7 @@ from endpoints.auth.reset_pass import reset_pass_bp
 from endpoints.auth.reset_pass_form import reset_pass_form_bp
 from endpoints.auth.change_pass import change_password_bp
 
-from endpoints.doctor.select_doctor import select_doctor_bp
+from endpoints.doctor.select_doctors import select_doctors_bp
 from endpoints.doctor.select_doctor_id import select_doctor_id_bp
 from endpoints.doctor.delete_doctor import delete_doctor_bp
 from endpoints.doctor.update_doctor import update_doctor_bp
@@ -40,6 +40,9 @@ from endpoints.patient.select_patient_id import select_patient_id_bp
 from endpoints.patient.select_patients import select_patients_bp
 from endpoints.patient.update_patient_doctor import update_patient_doctor_bp
 from endpoints.patient.update_patient_status import update_patient_status_bp
+
+from endpoints.sessions.select_sessions import select_sessions_bp
+from endpoints.sessions.update_session import update_session_bp
 
 app = Flask(__name__)
 
@@ -99,7 +102,7 @@ app.register_blueprint(reset_pass_bp, url_prefix='/auth')
 app.register_blueprint(reset_pass_form_bp, url_prefix='/auth')
 app.register_blueprint(change_password_bp, url_prefix='/auth')
 
-app.register_blueprint(select_doctor_bp, url_prefix='/doctor')
+app.register_blueprint(select_doctors_bp, url_prefix='/doctor')
 app.register_blueprint(select_doctor_id_bp, url_prefix='/doctor')
 app.register_blueprint(delete_doctor_bp, url_prefix='/doctor')
 app.register_blueprint(update_doctor_bp, url_prefix='/doctor')
@@ -118,6 +121,9 @@ app.register_blueprint(update_patient_bp, url_prefix='/patient')
 app.register_blueprint(delete_patient_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_status_bp, url_prefix='/module')
+
+app.register_blueprint(select_sessions_bp, url_prefix='/sessions')
+app.register_blueprint(update_session_bp, url_prefix='/sessions')
 
 @app.route('/', methods=['GET'])
 def index():

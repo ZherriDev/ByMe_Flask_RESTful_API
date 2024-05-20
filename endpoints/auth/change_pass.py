@@ -39,7 +39,7 @@ def change_password():
         ).fetchone()
         
         result = result_old_pass._asdict()
-        name = result_old_pass['fullname']
+        name = result['fullname']
 
         if bcrypt.checkpw(data['old_password'].encode('utf8'), result['password'].encode('utf8')):
             salt = bcrypt.gensalt()
@@ -73,8 +73,8 @@ def change_password():
             logger.info(f"Doctor ID:{doctor_id} changed his password.", extra={"method": "POST", "statuscode": 200})
             return jsonify({'success': True}), 200    
         else:
-            logger.warning(f"Doctor ID:{doctor_id} tried to change his password but the old_password was invalid.", extra={"method": "POST", "statuscode": 200})
-            return jsonify({'message': 'Invalid old password'}), 400
+            logger.warning(f"Doctor ID:{doctor_id} tried to change his password but the old_password was invalid.", extra={"method": "POST", "statuscode": 401})
+            return jsonify({'message': 'Invalid old password'}), 401
         
     except Exception as e:
         session.rollback()

@@ -32,6 +32,8 @@ def select_doctor_id(id):
         
         if result:
             result = result._asdict()
+            if result['birthdate'] != None:
+                result['birthdate'] = result['birthdate'].strftime('%Y-%m-%d')
         
         logger.info(f"Selection of Doctor ID:{data['doctor_id']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'doctor': result}), 200

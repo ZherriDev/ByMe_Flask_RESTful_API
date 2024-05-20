@@ -5,21 +5,22 @@ from sqlalchemy import text
 from ..conn import Session
 from ..logger import logger
 
-select_doctor_bp = Blueprint('select_doctor', __name__)
+select_doctors_bp = Blueprint('select_doctors', __name__)
 
-class SelectDoctorSchema(Schema):
-    search = fields.Str(required=True)
+class SelectDoctorsSchema(Schema):
+    search = fields.Str(allow_none=True)
 
-@select_doctor_bp.route('/select_doctor/<search>', methods=['GET'])
+@select_doctors_bp.route('/select_doctors', methods=['GET'], defaults={'search': None})
+@select_doctors_bp.route('/select_doctors/<search>', methods=['GET'])
 @jwt_required()
-def select_doctor(search):
+def select_doctors(search):
     
     data = {'search': search}
-    schema = SelectDoctorSchema()
+    schema = SelectDoctorsSchema()
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid select doctor request made", extra={"method": "GET", "statuscode": 400})
+        logger.error(f"Invalid select doctors request made", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -38,6 +39,8 @@ def select_doctor(search):
             
         for doctor in result:
             doctor = doctor._asdict()
+            if doctor['birthdate'] != None:
+                doctor['birthdate'] = doctor['birthdate'].strftime('%Y-%m-%d')
             doctors.append(doctor)
         
         logger.info(f"Selection of {data['search']} done successfully.", extra={"method": "GET", "statuscode": 200})
