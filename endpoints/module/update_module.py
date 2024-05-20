@@ -12,7 +12,6 @@ class UpdateModuleSchema(Schema):
     module_id = fields.Int(required=True)
     episode = fields.String(required=True)
     module = fields.String(required=True)
-    status = fields.String(required=True)
 
 @update_module_bp.route('/update_module', methods=['PATCH'])
 @limiter.limit("5 per minute")
@@ -34,12 +33,11 @@ def update_module():
     
     try:
         session.execute(
-            text("UPDATE modules SET episode = :episode, module = :module, status = :status WHERE module_id = :module_id"),
+            text("UPDATE modules SET episode = :episode, module = :module WHERE module_id = :module_id"),
             {
                 'module_id': module_id,
                 'episode': data['episode'],
                 'module': data['module'],
-                'status': data['status'],
             },
             
         )

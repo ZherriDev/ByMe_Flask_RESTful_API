@@ -22,6 +22,7 @@ class InsertPatientSchema(Schema):
     town = fields.Str(required=True)
     nif = fields.Int(required=True)
     sns = fields.Int(required=True)
+    status = fields.Str(required=True)
 
 @insert_patient_bp.route('/insert_patient', methods=['POST'])
 @jwt_required()
@@ -43,8 +44,8 @@ def insert_patient():
     try:
         session.execute(
             text("INSERT INTO patients (name, telephone, email, sex, birthdate, address, postalcode, town, nif, \
-                sns, doctor_id, processnumber, admission_date) VALUES (:name, :telephone, :email, :sex, :birthdate, :address, :postalcode, \
-                :town, :nif, :sns, :doctor_id, :processnumber, :admission_date)"),
+                sns, doctor_id, processnumber, status, admission_date) VALUES (:name, :telephone, :email, :sex, :birthdate, :address, :postalcode, \
+                :town, :nif, :sns, :doctor_id, :processnumber, :status, :admission_date)"),
             {
                 'name': data['name'], 
                 'telephone': data['telephone'],
@@ -58,9 +59,9 @@ def insert_patient():
                 'sns':data['sns'],
                 'doctor_id': data['doctor_id'],
                 'processnumber': data['processnumber'],
+                'status': data['status'],
                 'admission_date': datetime.now()
             },
-            
         )
         session.commit()
         
