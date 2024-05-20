@@ -39,7 +39,8 @@ def select_doctors(search):
             
         for doctor in result:
             doctor = doctor._asdict()
-            doctor['birthdate'] = doctor['birthdate'].strftime('%Y-%m-%d')
+            if doctor['birthdate'] != None:
+                doctor['birthdate'] = doctor['birthdate'].strftime('%Y-%m-%d')
             doctors.append(doctor)
         
         logger.info(f"Selection of {data['search']} done successfully.", extra={"method": "GET", "statuscode": 200})
