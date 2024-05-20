@@ -38,7 +38,7 @@ def select_sessions(id):
             {'doctor_id': doctor_id}
         ).fetchall()
 
-        result_id = session.execute(text('SELECT session_id FROM sessions WHERE jti = :jti'),
+        result_id = session.execute(text('SELECT session_id FROM sessions WHERE jti = :jti AND in_blacklist = 0'),
             {
                 "jti": jti
             }).fetchone()
