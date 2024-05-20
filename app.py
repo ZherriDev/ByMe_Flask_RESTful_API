@@ -120,7 +120,7 @@ app.register_blueprint(select_patients_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_bp, url_prefix='/patient')
 app.register_blueprint(delete_patient_bp, url_prefix='/patient')
 app.register_blueprint(update_patient_doctor_bp, url_prefix='/patient')
-app.register_blueprint(update_patient_status_bp, url_prefix='/module')
+app.register_blueprint(update_patient_status_bp, url_prefix='/patient')
 
 app.register_blueprint(select_sessions_bp, url_prefix='/sessions')
 app.register_blueprint(update_session_bp, url_prefix='/sessions')
