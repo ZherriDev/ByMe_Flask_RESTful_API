@@ -12,6 +12,9 @@ insert_appointments_bp = Blueprint('insert_appointments', __name__)
 class InsertAppointmentSchema(Schema):
     doctor_id = fields.Int(required=True)
     patient_id = fields.Int(required=True)
+    subject = fields.Str(required=True)
+    date = fields.Str(required=True)
+    time = fields.Str(required=True)
 
 @insert_appointments_bp.route('/insert_appointments', methods=['POST'])
 @limiter.limit("5 per minute")
@@ -29,11 +32,13 @@ def insert_appointments():
     
     try:
         session.execute(
-            text('INSERT INTO appointment (doctor_id, patient_id, date_time) VALUES (:doctor_id, :patient_id, :date_time)'),
+            text('INSERT INTO appointment (doctor_id, patient_id, subject, date, time) VALUES (:doctor_id, :patient_id, :subject, :date, :time)'),
             {
                 'doctor_id': data['doctor_id'],
                 'patient_id': data['patient_id'],
-                'date_time': datetime.now(),
+                'subject': data['subject'],
+                'date': data['date'],
+                'time': data['time'],
             }
         )
         session.commit()
