@@ -34,6 +34,7 @@ def select_module_id(id):
         
         if result:
             result = result._asdict()
+            result['creation_date'] = result['creation_date'].strftime('%Y-%m-%d')
             
         logger.info(f"Doctor ID:{doctor_id} selected Module ID:{module_id}", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'module': result}), 200
