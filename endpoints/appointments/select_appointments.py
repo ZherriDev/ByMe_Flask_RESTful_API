@@ -45,12 +45,13 @@ def select_appointments(query, date):
             minutes, seconds = divmod(remainder, 60)
             appointment['time'] = '{:02}:{:02}:{:02}'.format(hours, minutes, seconds)
             result2 = session.execute(
-                text('SELECT name, processnumber FROM patients WHERE patient_id = :patient_id'),
+                text('SELECT name, processnumber, sex FROM patients WHERE patient_id = :patient_id'),
                 {'patient_id': appointment['patient_id']}
             ).fetchone()
             appointment['patient_data'] = {
                 'name': result2[0],
-                'processnumber': result2[1]
+                'processnumber': result2[1],
+                'sex': result2[2],
             }
             appointments.append(appointment)
         
