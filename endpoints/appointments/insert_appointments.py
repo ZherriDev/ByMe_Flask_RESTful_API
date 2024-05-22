@@ -32,7 +32,7 @@ def insert_appointments():
     
     try:
         session.execute(
-            text('INSERT INTO appointment (doctor_id, patient_id, subject, date, time) VALUES (:doctor_id, :patient_id, :subject, :date, :time)'),
+            text('INSERT INTO appointments (doctor_id, patient_id, subject, date, time) VALUES (:doctor_id, :patient_id, :subject, :date, :time)'),
             {
                 'doctor_id': data['doctor_id'],
                 'patient_id': data['patient_id'],
