@@ -6,23 +6,23 @@ from ..conn import Session
 from ..logger import logger
 
 
-select_module_bp = Blueprint('select_module', __name__)
+select_module_bp = Blueprint('select_modules', __name__)
 
-class ShowModuleSchema(Schema):
+class ShowModulesSchema(Schema):
     patient_id = fields.Int(required=True)
 
-@select_module_bp.route('/select_module/<int:id>', methods=['GET'])
+@select_module_bp.route('/select_modules/<int:id>', methods=['GET'])
 @jwt_required()
 def select_modules(id):
 
     doctor_id = get_jwt_identity()
     
     data = {'patient_id': id}
-    schema = ShowModuleSchema()
+    schema = ShowModulesSchema()
     errors = schema.validate(data)
 
     if errors:
-        logger.error(f"Invalid module select request made by Doctor ID:{doctor_id}.", extra={"method": "GET", "statuscode": 400})
+        logger.error(f"Invalid modules select request made by Doctor ID:{doctor_id}.", extra={"method": "GET", "statuscode": 400})
         return jsonify({'errors': errors}), 400
     
     session = Session()
@@ -39,7 +39,7 @@ def select_modules(id):
             module = module._asdict()
             modules.append(module)
         
-        logger.info(f"Doctor ID:{doctor_id} selected all modules from Patiend ID:{patient_id}.", extra={"method": "GET", "statuscode": 200})
+        logger.info(f"Doctor ID:{doctor_id} selected all modules from Patient ID:{patient_id}.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'modules': modules}), 200
     except Exception as e:
         session.rollback()
