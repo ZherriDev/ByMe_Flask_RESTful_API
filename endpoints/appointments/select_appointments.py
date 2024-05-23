@@ -10,11 +10,12 @@ select_appointments_bp = Blueprint('select_appointments', __name__)
 
 class SelectAppointmentSchema(Schema):
     date = fields.Str(required=True)
+    time = fields.Str(required=True)
 
-@select_appointments_bp.route("/select_appointments/<query>/<date>", methods=['GET'])
+@select_appointments_bp.route("/select_appointments/<query>/<date>/<time>", methods=['GET'])
 @jwt_required()
-def select_appointments(query, date):
-    data = {'date': date}
+def select_appointments(query, date, time):
+    data = {'date': date, 'time': time}
     schema = SelectAppointmentSchema()
     errors = schema.validate(data)
 
@@ -29,8 +30,8 @@ def select_appointments(query, date):
 
         if query == 'one':
             result = session.execute(
-                text('SELECT * FROM appointments WHERE date = :date ORDER BY time ASC'),
-                {'date': date}
+                text('SELECT * FROM appointments WHERE date = :date AND time >= :time ORDER BY time ASC'),
+                {'date': date, 'time': time}
             ).fetchall()
         elif query == 'all':
             result = session.execute(
@@ -52,7 +53,16 @@ def select_appointments(query, date):
                 'name': result2[0],
                 'processnumber': result2[1]
             }
-            appointments.append(appointment)
+            if query == 'all':
+                if appointment['date'] == date:
+                    if appointment['time'] >= time:
+                        appointments.append(appointment)
+                    else:
+                        pass
+                else:
+                    appointments.append(appointment)
+            else:
+                appointments.append(appointment)
         
         logger.info(f"Selection of {data['date']} done successfully.", extra={"method": "GET", "statuscode": 200})
         return jsonify({'success': True, 'appointments': appointments}), 200

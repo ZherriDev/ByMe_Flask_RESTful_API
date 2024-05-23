@@ -29,7 +29,13 @@ def delete_patient():
     
     try:
         session.execute(
-            text("DELETE FROM modules WHERE patient_id = :id"),
+            text("DELETE FROM modules appointments WHERE patient_id = :id"),
+            {'id': data['patient_id']}
+        )
+        session.commit()
+        
+        session.execute(
+            text("DELETE FROM appointments WHERE patient_id = :id"),
             {'id': data['patient_id']}
         )
         session.commit()

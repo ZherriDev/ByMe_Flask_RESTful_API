@@ -37,19 +37,30 @@ def delete_doctor():
                     {'patient_id': patient_id}
                 )
                 session.commit()
+                
+                session.execute(
+                    text("DELETE FROM appointments WHERE doctor_id = :id AND patient_id = :patient_id"),
+                    {'id': data['doctor_id'], 'patient_id': patient_id}
+                )
+                session.commit()
             
             session.execute(
                 text("DELETE FROM patients WHERE doctor_id = :id"),
                 {'id': data['doctor_id']},
             )
             session.commit()
+        
+        session.execute(
+            text("DELETE FROM sessions WHERE doctor_id = :id"),
+            {'id': data['doctor_id']},
+        )
+        session.commit()
             
-        else:
-            session.execute(
-                text("DELETE FROM doctors WHERE doctor_id = :id"),
-                {'id': data['doctor_id']},
-            )
-            session.commit()
+        session.execute(
+            text("DELETE FROM doctors WHERE doctor_id = :id"),
+            {'id': data['doctor_id']},
+        )
+        session.commit()
         
         logger.info(f"Deletion of Doctor ID:{data['doctor_id']} done successfully.", extra={"method": "DELETE", "statuscode": 200})
         return jsonify({'success': True}), 200
