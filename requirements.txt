@@ -39,7 +39,7 @@ PyGetWindow==0.0.9
 Pygments==2.17.2
 PyJWT==2.8.0
 PyMsgBox==1.0.9
-PyMySQL==1.1.0
+PyMySQL==1.1.1
 pyperclip==1.8.2
 PyRect==0.2.0
 PyScreeze==0.1.30
