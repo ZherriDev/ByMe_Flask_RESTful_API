@@ -45,7 +45,7 @@ PyRect==0.2.0
 PyScreeze==0.1.30
 pytweening==1.2.0
 pytz==2024.1
-requests==2.31.0
+requests==2.32.2
 rich==13.7.1
 setuptools==69.2.0
 SQLAlchemy==2.0.29
