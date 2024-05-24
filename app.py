@@ -4,6 +4,8 @@ from sqlalchemy import text
 from endpoints.conn import Session
 from flask_mailman import Mail
 from endpoints.utils import set_app
+import os
+from dotenv import load_dotenv
 
 from endpoints.admin.shutdown import shutdown_bp
 
@@ -46,15 +48,17 @@ from endpoints.sessions.update_session import update_session_bp
 
 app = Flask(__name__)
 
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
-app.config['MAIL_PORT'] = 587
+load_dotenv()
+
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'cinesquadd@gmail.com'
-app.config['MAIL_PASSWORD'] = 'pbeu qgam kcpn gchv'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
 
 mail = Mail(app)
 
-app.config['JWT_SECRET_KEY'] = '5#$*e;phl"n£zRz@s1A#ki%Z{I.x=wzO+cdF~£`+8xK?<JZ6zA'
+app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
 set_app(app)
 

@@ -3,6 +3,10 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import SQLAlchemyError
 import logging, subprocess
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -15,11 +19,11 @@ logger.addHandler(file_handler)
 
 file_handler.setLevel(logging.DEBUG)
 
-user_db = 'sql8704784'
-password_db = 'k1RkHr89Fi'
-host_db = 'sql8.freesqldatabase.com'
-port_db = 3306
-database_db = 'sql8704784'
+user_db = os.getenv('USER_DB')
+password_db = os.getenv('PASSWORD_DB')
+host_db = os.getenv('HOST_DB')
+port_db = os.getenv('PORT_DB')
+database_db = os.getenv('DATABASE_DB')
 
 engine = create_engine(f'mysql+pymysql://{user_db}:{password_db}@{host_db}:{port_db}/{database_db}')
 Session = sessionmaker(bind=engine)
