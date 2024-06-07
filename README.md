@@ -17,8 +17,8 @@ The main objective of the API is to provide a robust and scalable interface for 
 The API facilitates communication between the mobile application developed in Flutter and the server, ensuring that data is transferred quickly and securely.
 
 ## ✏️ Authors
-- [@RaveDev](https://github.com/Ravejaja)
-- [@ZherriDev](https://github.com/ZherriDev)
+- [RaveDev](https://github.com/Ravejaja)
+- [ZherriDev](https://github.com/ZherriDev)
 
 ## 🔗 Endpoints
 ### Admin:
